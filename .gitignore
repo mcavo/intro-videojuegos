@@ -1,0 +1,9 @@
+# Unity
+
+tp1/freeway/Library/*
+tp1/freeway/Temp/*
+tp1/freeway/freeway.sln
+
+# Mac
+
+*.DS_Store
