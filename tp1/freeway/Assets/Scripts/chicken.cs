@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class chicken : MonoBehaviour {
 	public float speed = 0.05f;
+
+	private int score;
+	public Text scoreText;
 	//TODO: check if it should not be public. 
 	//TODO: same problem with dimensions of screen
-	private Vector3 initialPosition = new Vector3(0, 1f*0.35f, 0);
-
+	private Vector3 initialPosition = new Vector3(4f*0.35f, 1f*0.35f, 0);
 
 	// Use this for initialization
 	void Start () {
-			
+		score = 0;
+		scoreText = GameObject.Find ("Score").GetComponent<Text>(); 
+		SetScoreText();
 	}
 	
 	// Update is called once per frame
@@ -41,6 +46,12 @@ public class chicken : MonoBehaviour {
 		if (col2d.tag.Equals("EndRoad")) {
 			Debug.Log ("Pasé uno");
 			transform.position = initialPosition;
+			score++;
+			SetScoreText ();
 		}
+	}
+
+	void SetScoreText() {
+		scoreText.text = score.ToString();
 	}
 }
