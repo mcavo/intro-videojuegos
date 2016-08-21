@@ -23,8 +23,14 @@ public class littleCarPink : MonoBehaviour {
 	private void checkBoundaries() {
 		//x = 0 is the mid of the screen
 		// TODO: Por qué tengo que poner ese 100 inmundo?? 
-		if (transform.position.x < Screen.width / -100f) { 
-			transform.position = new Vector3 (Screen.width/100, transform.position.y, transform.position.z);
+		if (speed > 0) {
+			if (transform.position.x < 0) { 
+				transform.position = new Vector3 (17*0.35f, transform.position.y, transform.position.z);
+			}
+		} else {
+			if (transform.position.x > 17*0.35f) { 
+				transform.position = new Vector3 (0, transform.position.y, transform.position.z);
+			}
 		}
 	}
 }
