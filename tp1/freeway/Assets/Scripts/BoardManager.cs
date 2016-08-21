@@ -11,6 +11,7 @@ public class BoardManager : MonoBehaviour {
 	// 2 = both
 	// 3 = white
 	// 4 = end
+	public GameObject chicken;										//Player
 	public GameObject[] floorTiles;									//Vector with different types of floors.
 	public GameObject[] rightCarTiles;								//Vector with differetn types of cars.
 	public GameObject[] leftCarTiles;								//Vector with differetn types of cars.
@@ -99,6 +100,10 @@ public class BoardManager : MonoBehaviour {
 			//			(instance as littleCarPink).speed = -0.001;
 			instance.transform.SetParent (boardHolder);
 		}
+
+		GameObject chicken_instance =
+			Instantiate (chicken, new Vector3 (0, 1*0.35f, 0f), Quaternion.identity) as GameObject;
+		chicken_instance.transform.SetParent (boardHolder);
 
 		//Creates the outer walls and floor.
 		BoardSetup ();
