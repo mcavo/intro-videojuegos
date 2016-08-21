@@ -31,5 +31,10 @@ public class chicken : MonoBehaviour {
 			Debug.Log ("perdí :(");
 			transform.position = initialPosition;
 		}
+
+		if (col2d.tag.Equals("Finish")) {
+			Debug.Log ("Pasé uno");
+			transform.position = initialPosition;
+		}
 	}
 }
