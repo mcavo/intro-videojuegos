@@ -102,7 +102,7 @@ public class BoardManager : MonoBehaviour {
 		}
 
 		GameObject chicken_instance =
-			Instantiate (chicken, new Vector3 (0, 1*0.35f, 0f), Quaternion.identity) as GameObject;
+			Instantiate (chicken, new Vector3 (4f*0.35f, 1*0.35f, 0f), Quaternion.identity) as GameObject;
 		chicken_instance.transform.SetParent (boardHolder);
 
 		//Creates the outer walls and floor.
