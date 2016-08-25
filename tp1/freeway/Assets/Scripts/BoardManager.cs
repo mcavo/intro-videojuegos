@@ -91,7 +91,7 @@ public class BoardManager : MonoBehaviour {
 		for (int y = 2; y < 7; y++) {
 			toInstantiate = rightCarTiles[0];
 			GameObject instance =
-				Instantiate (toInstantiate, new Vector3 (0, y*0.35f, 0f), Quaternion.identity) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (0, y*0.35f, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
 			//			(instance as littleCarPink).speed = 0.001;
 			instance.transform.SetParent (boardHolder);
 		}
