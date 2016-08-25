@@ -4,12 +4,14 @@ using System.Collections;
 
 public class chicken : MonoBehaviour {
 	public float speed = 0.05f;
+	public static float assetsSize = 0.36f;
 
+	private RectTransform rectTransform;
 	private int score;
 	public Text scoreText;
 	//TODO: check if it should not be public. 
 	//TODO: same problem with dimensions of screen
-	private Vector3 initialPosition = new Vector3(4f*0.35f, 1f*0.35f, 0);
+	private Vector3 initialPosition = new Vector3(4f*assetsSize, 1f*assetsSize, 0);
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +30,7 @@ public class chicken : MonoBehaviour {
 		if (Input.GetKey(KeyCode.UpArrow)) {
 			transform.position = new Vector3 (currentPosition.x, currentPosition.y + speed, currentPosition.z);			
 		} else if (Input.GetKey(KeyCode.DownArrow)) {
-			if (currentPosition.y - speed < 1f * 0.35f) {
+			if (currentPosition.y - speed < 1f * assetsSize) {
 				transform.position = initialPosition;
 			} else {
 				transform.position = new Vector3 (currentPosition.x, currentPosition.y - speed, currentPosition.z);
