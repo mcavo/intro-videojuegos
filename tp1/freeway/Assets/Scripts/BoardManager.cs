@@ -30,16 +30,19 @@ public class BoardManager : MonoBehaviour {
 			//Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
 			GameObject instance0 =
 				Instantiate (toInstantiate, new Vector3 (x*0.35f, 0f, 0f), Quaternion.identity) as GameObject;
+			toInstantiate = floorTiles[1];
 			GameObject instance1 =
 				Instantiate (toInstantiate, new Vector3 (x*0.35f, 1f*0.35f, 0f), Quaternion.identity) as GameObject;
+			toInstantiate = floorTiles[2];
 			GameObject instance2 =
 				Instantiate (toInstantiate, new Vector3 (x*0.35f, 2f*0.35f, 0f), Quaternion.identity) as GameObject;
+			toInstantiate = floorTiles[6];
+			GameObject instance12 =
+				Instantiate (toInstantiate, new Vector3 (x*0.35f, 12f*0.35f, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
+
+			toInstantiate = floorTiles[0];
 			GameObject instance13 =
 				Instantiate (toInstantiate, new Vector3 (x*0.35f, 13f*0.35f, 0f), Quaternion.identity) as GameObject;
-
-			toInstantiate = floorTiles[4];
-			GameObject instance12 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 12f*0.35f, 0f), Quaternion.identity) as GameObject;
 
 			//Assign one white line = 2
 			for (int y = 3; y < 6; y++) {
@@ -57,12 +60,12 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			//Assign both lines = 3
-			toInstantiate = floorTiles[2];
+			toInstantiate = floorTiles[4];
 			GameObject instance6 =
 				Instantiate (toInstantiate, new Vector3 (x*0.35f, 6*0.35f, 0f), Quaternion.identity) as GameObject;	
 
 			//Assign both lines = 1
-			toInstantiate = floorTiles[1];
+			toInstantiate = floorTiles[5];
 			GameObject instance7 =
 				Instantiate (toInstantiate, new Vector3 (x*0.35f, 7*0.35f, 0f), Quaternion.identity) as GameObject;	
 
