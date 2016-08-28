@@ -5,21 +5,23 @@ using System.Collections;
 public class chicken : MonoBehaviour {
 	public float speed = 0.05f;
 	public static float assetsSize = 0.36f;
-
-	private RectTransform rectTransform;
-	private int score;
-	public Text scoreText;
-	public Canvas canvas;
 	public Vector3 initialPosition;
 	public KeyCode upKey;
 	public KeyCode downKey;
+	private Text scoreText;
+
+	private RectTransform rectTransform;
+	private int score;
+	private Canvas canvas;
+	private float correctionFactor = 0.10f;
 
 	// Use this for initialization
 	void Start () {
+		initialPosition = assetsSize*initialPosition;
 		score = 0;
-		canvas = GameObject.Find ("Canvas").GetComponent<Canvas>();
-		scoreText.transform.SetParent (canvas);
+		initializeText();
 		SetScoreText();
+		transform.position = initialPosition;
 	}
 
 	// Update is called once per frame
@@ -52,7 +54,48 @@ public class chicken : MonoBehaviour {
 		}
 	}
 
-	void SetScoreText() {
+	private void SetScoreText() {
 		scoreText.text = score.ToString ();
+	}
+
+	private void initializeText() {
+		GameObject scoreT = new GameObject("TextScore");
+		canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+
+		scoreT.transform.SetParent(canvas.transform, false);
+
+		RectTransform trans = scoreT.AddComponent<RectTransform>();
+
+		Text text = scoreT.AddComponent<Text>();
+		scoreText = text;
+
+		settingAnchor (trans);
+		addingTextStyle();
+		updateTextDimensionAndPosition ();
+	}
+
+	private void updateTextDimensionAndPosition () {
+		Camera camera = GameObject.Find ("Main Camera").GetComponent<Camera>();
+		int newSize = Screen.height / 10;
+		scoreText.fontSize = newSize;
+		Vector3 cameraPosition = camera.WorldToScreenPoint (new Vector3(initialPosition.x, 13f*assetsSize + correctionFactor, 0));
+		scoreText.rectTransform.anchoredPosition = new Vector2(cameraPosition.x, cameraPosition.y);
+	}
+
+	private void addingTextStyle() {
+		//Adding fotmat style to text
+		Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+		scoreText.alignment = TextAnchor.MiddleCenter;
+		scoreText.color = Color.white;
+		scoreText.font = ArialFont;
+		scoreText.horizontalOverflow = HorizontalWrapMode.Overflow;
+		scoreText.verticalOverflow = VerticalWrapMode.Overflow;
+	}
+
+	private void settingAnchor(RectTransform trans) {
+		//Set anchor in the bottom left corner
+		trans.anchorMax = new Vector2 (0f, 0f);
+		trans.anchorMin = new Vector2 (0f, 0f);
+		trans.pivot = new Vector2 (0.5f, 0.5f);
 	}
 }

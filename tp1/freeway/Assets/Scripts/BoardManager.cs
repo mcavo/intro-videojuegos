@@ -18,7 +18,7 @@ public class BoardManager : MonoBehaviour {
 	public GameObject[] floorTiles;									//Vector with different types of floors.
 	public GameObject[] rightCarTiles;								//Vector with different types of cars.
 	public GameObject[] leftCarTiles;								//Vector with different types of cars.
-	public GameObject[] chickens;										//Vector with different players
+	public GameObject[] chickens;									//Vector with different players
 
 	private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 
@@ -108,19 +108,11 @@ public class BoardManager : MonoBehaviour {
 			instance.transform.SetParent (boardHolder);
 		}
 
-		chickens [0].transform.position = new Vector3 (4f * assetsSize, 1 * assetsSize, 0f);
-		chickens [1].transform.position = new Vector3 (13f * assetsSize, 1 * assetsSize, 0f);
-
-//		chicken chicken1 = chickens[0] as chicken;
-//		chicken1.downKey = KeyCode.S;
-//		chicken1.upKey = KeyCode.W;
-//		chicken1.initialPosition = new Vector3 (4f * assetsSize, 1 * assetsSize, 0f);
-//
-//		chicken chicken2 = chickens [1] as chicken;
-//		chicken2.downKey = KeyCode.DownArrow;
-//		chicken2.upKey = KeyCode.UpArrow;
-//		chicken2.initialPosition = new Vector3 (13f * assetsSize, 1 * assetsSize, 0f);
-
+		// Initialize players
+		for (int i = 0; i < chickens.Length; i++) {
+			GameObject chickenInstance = Instantiate (chickens[i], new Vector3 (0f, 0f, 0f), Quaternion.identity) as GameObject;
+			chickenInstance.transform.SetParent (boardHolder);
+		}
 
 		//Creates the outer walls and floor.
 		BoardSetup ();
