@@ -16,8 +16,7 @@ public class BoardManager : MonoBehaviour {
 	// 5 = grey with a yellow line on bottom
 	// 6 = grass -> where the chicken has to arrive
 	public GameObject[] floorTiles;									//Vector with different types of floors.
-	public GameObject[] rightCarTiles;								//Vector with different types of cars.
-	public GameObject[] leftCarTiles;								//Vector with different types of cars.
+	public GameObject[] carTiles;								//Vector with different types of cars.
 	public GameObject[] chickens;									//Vector with different players
 
 	public Text timeText;
@@ -96,14 +95,14 @@ public class BoardManager : MonoBehaviour {
 		//TODO: Ask order layers
 		//TODO: modify difficulty later
 		for (int y = 2; y < 7; y++) {
-			toInstantiate = rightCarTiles[0];
+			toInstantiate = carTiles[y - 2];
 			GameObject instance =
-				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 			instance.transform.SetParent (boardHolder);
 		}
 
 		for (int y = 7; y < 12; y++) {
-			toInstantiate = leftCarTiles[0];
+			toInstantiate = carTiles[y - 7];
 			GameObject instance =
 				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 			//			(instance as littleCarPink).speed = -0.001;
