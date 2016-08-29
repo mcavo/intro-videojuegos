@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class BoardManager : MonoBehaviour {
 
 	public int columns = 18; 										//Number of columns in our game board.
 	public int rows = 14;											//Number of rows in our game board.
-
 	public static float assetsSize = 0.36f;
 
 	// 0 = empty
@@ -20,7 +20,10 @@ public class BoardManager : MonoBehaviour {
 	public GameObject[] leftCarTiles;								//Vector with different types of cars.
 	public GameObject[] chickens;									//Vector with different players
 
+	public Text timeText;
+
 	private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
+	private Canvas canvas;
 
 	//Sets up the outer walls and floor (background) of the game board.
 	void BoardSetup () {
@@ -84,7 +87,7 @@ public class BoardManager : MonoBehaviour {
 			instance12.transform.SetParent (boardHolder);
 			instance13.transform.SetParent (boardHolder);
 		}
-			
+		initializeText();
 	}
 
 	//SetupScene initializes our diffculty and calls the previous functions to lay out the game board
@@ -96,7 +99,6 @@ public class BoardManager : MonoBehaviour {
 			toInstantiate = rightCarTiles[0];
 			GameObject instance =
 				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
-			//			(instance as littleCarPink).speed = 0.001;
 			instance.transform.SetParent (boardHolder);
 		}
 
@@ -107,7 +109,7 @@ public class BoardManager : MonoBehaviour {
 			//			(instance as littleCarPink).speed = -0.001;
 			instance.transform.SetParent (boardHolder);
 		}
-
+			
 		// Initialize players
 		for (int i = 0; i < chickens.Length; i++) {
 			GameObject chickenInstance = Instantiate (chickens[i], new Vector3 (0f, 0f, 0f), Quaternion.identity) as GameObject;
@@ -118,4 +120,44 @@ public class BoardManager : MonoBehaviour {
 		BoardSetup ();
 	}
 
+	private void initializeText() {
+		GameObject timeGameObject = new GameObject("TextScore");
+		canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+
+		timeGameObject.transform.SetParent(canvas.transform, false);
+
+		RectTransform trans = timeGameObject.AddComponent<RectTransform>();
+
+		Text text = timeGameObject.AddComponent<Text>();
+		timeText = text;
+
+		settingAnchor (trans);
+		addingTextStyle();
+		updateTextDimensionAndPosition ();
+	}
+
+	private void updateTextDimensionAndPosition () {
+		Camera camera = GameObject.Find ("Main Camera").GetComponent<Camera>();
+		int newSize = Screen.height / 11;
+		timeText.fontSize = newSize;
+		Vector3 cameraPosition = camera.WorldToScreenPoint (new Vector3(9f*assetsSize, 13f*assetsSize, 0));
+		timeText.rectTransform.anchoredPosition = new Vector2 (cameraPosition.x, cameraPosition.y);
+	}
+
+	private void addingTextStyle() {
+		//Adding fotmat style to text
+		Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+		timeText.alignment = TextAnchor.MiddleCenter;
+		timeText.color = Color.white;
+		timeText.font = ArialFont;
+		timeText.horizontalOverflow = HorizontalWrapMode.Overflow;
+		timeText.verticalOverflow = VerticalWrapMode.Overflow;
+	}
+
+	private void settingAnchor(RectTransform trans) {
+		//Set anchor in the bottom left corner
+		trans.anchorMax = new Vector2 (0f, 0f);
+		trans.anchorMin = new Vector2 (0f, 0f);
+		trans.pivot = new Vector2 (0.5f, 0.5f);
+	}
 }
