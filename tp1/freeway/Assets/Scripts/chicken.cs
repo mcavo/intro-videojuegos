@@ -5,21 +5,25 @@ using System.Collections;
 public class chicken : MonoBehaviour {
 	public float speed = 0.05f;
 	public static float assetsSize = 0.36f;
+	public Vector3 initialPosition;
+	public KeyCode upKey;
+	public KeyCode downKey;
+	private Text scoreText;
 
 	private RectTransform rectTransform;
 	private int score;
-	public Text scoreText;
-	//TODO: check if it should not be public. 
-	//TODO: same problem with dimensions of screen
-	private Vector3 initialPosition = new Vector3(4f*assetsSize, 1f*assetsSize, 0);
+	private Canvas canvas;
+	private float correctionFactor = 0.10f;
 
 	// Use this for initialization
 	void Start () {
+		initialPosition = assetsSize*initialPosition;
 		score = 0;
-		scoreText = GameObject.Find ("Score").GetComponent<Text>(); 
+		initializeText();
 		SetScoreText();
+		transform.position = initialPosition;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		checkInput ();
@@ -27,9 +31,9 @@ public class chicken : MonoBehaviour {
 
 	private void checkInput() {
 		Vector3 currentPosition = transform.position;
-		if (Input.GetKey(KeyCode.UpArrow)) {
+		if (Input.GetKey(upKey)) {
 			transform.position = new Vector3 (currentPosition.x, currentPosition.y + speed, currentPosition.z);			
-		} else if (Input.GetKey(KeyCode.DownArrow)) {
+		} else if (Input.GetKey(downKey)) {
 			if (currentPosition.y - speed < 1f * assetsSize) {
 				transform.position = initialPosition;
 			} else {
@@ -39,21 +43,59 @@ public class chicken : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D col2d) {
-		Debug.Log (col2d.tag);
 		if (col2d.tag.Equals ("LittlePinkCar")) {
-			Debug.Log ("perdí :(");
 			transform.position = initialPosition;
 		}
 
 		if (col2d.tag.Equals("EndRoad")) {
-			Debug.Log ("Pasé uno");
 			transform.position = initialPosition;
 			score++;
 			SetScoreText ();
 		}
 	}
 
-	void SetScoreText() {
-		scoreText.text = score.ToString();
+	private void SetScoreText() {
+		scoreText.text = score.ToString ();
+	}
+
+	private void initializeText() {
+		GameObject scoreT = new GameObject("TextScore");
+		canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+
+		scoreT.transform.SetParent(canvas.transform, false);
+
+		RectTransform trans = scoreT.AddComponent<RectTransform>();
+
+		Text text = scoreT.AddComponent<Text>();
+		scoreText = text;
+
+		settingAnchor (trans);
+		addingTextStyle();
+		updateTextDimensionAndPosition ();
+	}
+
+	private void updateTextDimensionAndPosition () {
+		Camera camera = GameObject.Find ("Main Camera").GetComponent<Camera>();
+		int newSize = Screen.height / 10;
+		scoreText.fontSize = newSize;
+		Vector3 cameraPosition = camera.WorldToScreenPoint (new Vector3(initialPosition.x, 13f*assetsSize + correctionFactor, 0));
+		scoreText.rectTransform.anchoredPosition = new Vector2(cameraPosition.x, cameraPosition.y);
+	}
+
+	private void addingTextStyle() {
+		//Adding fotmat style to text
+		Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+		scoreText.alignment = TextAnchor.MiddleCenter;
+		scoreText.color = Color.white;
+		scoreText.font = ArialFont;
+		scoreText.horizontalOverflow = HorizontalWrapMode.Overflow;
+		scoreText.verticalOverflow = VerticalWrapMode.Overflow;
+	}
+
+	private void settingAnchor(RectTransform trans) {
+		//Set anchor in the bottom left corner
+		trans.anchorMax = new Vector2 (0f, 0f);
+		trans.anchorMin = new Vector2 (0f, 0f);
+		trans.pivot = new Vector2 (0.5f, 0.5f);
 	}
 }

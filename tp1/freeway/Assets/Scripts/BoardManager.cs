@@ -6,15 +6,19 @@ public class BoardManager : MonoBehaviour {
 	public int columns = 18; 										//Number of columns in our game board.
 	public int rows = 14;											//Number of rows in our game board.
 
+	public static float assetsSize = 0.36f;
+
 	// 0 = empty
-	// 1 = yellow
-	// 2 = both
-	// 3 = white
-	// 4 = end
-	public GameObject chicken;										//Player
+	// 1 = grass -> chicken initial position
+	// 2 = grey tile
+	// 3 = grey with a white line
+	// 4 = grey with a yellow line on top
+	// 5 = grey with a yellow line on bottom
+	// 6 = grass -> where the chicken has to arrive
 	public GameObject[] floorTiles;									//Vector with different types of floors.
-	public GameObject[] rightCarTiles;								//Vector with differetn types of cars.
-	public GameObject[] leftCarTiles;								//Vector with differetn types of cars.
+	public GameObject[] rightCarTiles;								//Vector with different types of cars.
+	public GameObject[] leftCarTiles;								//Vector with different types of cars.
+	public GameObject[] chickens;									//Vector with different players
 
 	private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 
@@ -29,45 +33,45 @@ public class BoardManager : MonoBehaviour {
 			GameObject toInstantiate = floorTiles[0];
 			//Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
 			GameObject instance0 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 0f, 0f), Quaternion.identity) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 0f, 0f), Quaternion.identity) as GameObject;
 			toInstantiate = floorTiles[1];
 			GameObject instance1 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 1f*0.35f, 0f), Quaternion.identity) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 1f*assetsSize, 0f), Quaternion.identity) as GameObject;
 			toInstantiate = floorTiles[2];
 			GameObject instance2 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 2f*0.35f, 0f), Quaternion.identity) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 2f*assetsSize, 0f), Quaternion.identity) as GameObject;
 			toInstantiate = floorTiles[6];
 			GameObject instance12 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 12f*0.35f, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 12f*assetsSize, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
 
 			toInstantiate = floorTiles[0];
 			GameObject instance13 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 13f*0.35f, 0f), Quaternion.identity) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 13f*assetsSize, 0f), Quaternion.identity) as GameObject;
 
 			//Assign one white line = 2
 			for (int y = 3; y < 6; y++) {
 				toInstantiate = floorTiles[3];
 				GameObject instance =
-					Instantiate (toInstantiate, new Vector3 (x*0.35f, y*0.35f, 0f), Quaternion.identity) as GameObject;	
+					Instantiate (toInstantiate, new Vector3 (x*assetsSize, y*assetsSize, 0f), Quaternion.identity) as GameObject;	
 				instance.transform.SetParent (boardHolder);	
 			}
 
 			for (int y = 8; y < 12; y++) {
 				toInstantiate = floorTiles[3];
 				GameObject instance =
-					Instantiate (toInstantiate, new Vector3 (x*0.35f, y*0.35f, 0f), Quaternion.identity) as GameObject;	
+					Instantiate (toInstantiate, new Vector3 (x*assetsSize, y*assetsSize, 0f), Quaternion.identity) as GameObject;	
 				instance.transform.SetParent (boardHolder);	
 			}
 
 			//Assign both lines = 3
 			toInstantiate = floorTiles[4];
 			GameObject instance6 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 6*0.35f, 0f), Quaternion.identity) as GameObject;	
+				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 6*assetsSize, 0f), Quaternion.identity) as GameObject;	
 
 			//Assign both lines = 1
 			toInstantiate = floorTiles[5];
 			GameObject instance7 =
-				Instantiate (toInstantiate, new Vector3 (x*0.35f, 7*0.35f, 0f), Quaternion.identity) as GameObject;	
+				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 7*assetsSize, 0f), Quaternion.identity) as GameObject;	
 
 			//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
 			instance0.transform.SetParent (boardHolder);
@@ -91,7 +95,7 @@ public class BoardManager : MonoBehaviour {
 		for (int y = 2; y < 7; y++) {
 			toInstantiate = rightCarTiles[0];
 			GameObject instance =
-				Instantiate (toInstantiate, new Vector3 (0, y*0.35f, 0f), Quaternion.identity) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
 			//			(instance as littleCarPink).speed = 0.001;
 			instance.transform.SetParent (boardHolder);
 		}
@@ -99,14 +103,16 @@ public class BoardManager : MonoBehaviour {
 		for (int y = 7; y < 12; y++) {
 			toInstantiate = leftCarTiles[0];
 			GameObject instance =
-				Instantiate (toInstantiate, new Vector3 (0, y*0.35f, 0f), Quaternion.identity) as GameObject;
+				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 			//			(instance as littleCarPink).speed = -0.001;
 			instance.transform.SetParent (boardHolder);
 		}
 
-		GameObject chicken_instance =
-			Instantiate (chicken, new Vector3 (4f*0.35f, 1*0.35f, 0f), Quaternion.identity) as GameObject;
-		chicken_instance.transform.SetParent (boardHolder);
+		// Initialize players
+		for (int i = 0; i < chickens.Length; i++) {
+			GameObject chickenInstance = Instantiate (chickens[i], new Vector3 (0f, 0f, 0f), Quaternion.identity) as GameObject;
+			chickenInstance.transform.SetParent (boardHolder);
+		}
 
 		//Creates the outer walls and floor.
 		BoardSetup ();
