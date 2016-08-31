@@ -102,10 +102,9 @@ public class BoardManager : MonoBehaviour {
 		}
 
 		for (int y = 7; y < 12; y++) {
-			toInstantiate = carTiles[y - 7];
+			toInstantiate = carTiles[y - 2];
 			GameObject instance =
 				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
-			//			(instance as littleCarPink).speed = -0.001;
 			instance.transform.SetParent (boardHolder);
 		}
 			

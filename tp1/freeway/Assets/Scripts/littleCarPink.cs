@@ -6,6 +6,7 @@ public class littleCarPink : MonoBehaviour {
 	public float speed = 1f;
 	public float initialDistance;
 	public int difficult = 1;
+	public int numberInRows = 1;
 	public Vector3 initialPosition;
 
 	// Use this for initialization
