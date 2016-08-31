@@ -94,23 +94,22 @@ public class BoardManager : MonoBehaviour {
 		GameObject toInstantiate;
 		//TODO: Ask order layers
 		//TODO: modify difficulty later
-		for (int y = 2; y < 7; y++) {
-			toInstantiate = carTiles[y - 2];
-			for (int j = 1; j < 2; j++ ) {
-				GameObject instance =
-					Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
-				instance.transform.SetParent (boardHolder);
-				Vector3 originPosition = instance.transform.position;
-				littleCarPink script = instance.transform.GetComponent<littleCarPink> as littleCarPink;
-				script.initialize (j);
-			}
-		}
-
-		for (int y = 7; y < 12; y++) {
+		for (int y = 2; y < 12; y++) {
 			toInstantiate = carTiles[y - 2];
 			GameObject instance =
 				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 			instance.transform.SetParent (boardHolder);
+			littleCarPink script = instance.GetComponent<littleCarPink>();
+			script.initialize (1);
+			if (script.numberInRows > 1) {
+				for (int j = 2; j <= script.numberInRows; j++ ) {
+					instance =
+						Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
+					instance.transform.SetParent (boardHolder);
+					script = instance.GetComponent<littleCarPink>();
+					script.initialize (j);
+				}	
+			}
 		}
 			
 		// Initialize players
