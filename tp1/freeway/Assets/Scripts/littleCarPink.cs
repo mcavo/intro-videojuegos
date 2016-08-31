@@ -11,8 +11,8 @@ public class littleCarPink : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		initialPosition = new Vector3 (initialPosition.x*assetsSize, initialPosition.y*assetsSize, 0);
-		transform.position = initialPosition;
+//		initialPosition = new Vector3 (initialPosition.x*assetsSize, initialPosition.y*assetsSize, 0);
+//		transform.position = initialPosition;
 	}
 
 	// Update is called once per frame
@@ -20,6 +20,11 @@ public class littleCarPink : MonoBehaviour {
 		Vector3 currentPosition = transform.position;
 		transform.position = new Vector3 (currentPosition.x - speed*difficult, currentPosition.y, currentPosition.z);
 		checkBoundaries ();
+	}
+
+	public void initialize(int position) {
+		initialPosition = new Vector3 ((((position - 1)  * initialDistance + initialPosition.x) % 18) * assetsSize, initialPosition.y * assetsSize, initialPosition.z);
+		transform.position = initialPosition;
 	}
 
 	private void checkBoundaries() {

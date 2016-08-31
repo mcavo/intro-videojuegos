@@ -96,9 +96,14 @@ public class BoardManager : MonoBehaviour {
 		//TODO: modify difficulty later
 		for (int y = 2; y < 7; y++) {
 			toInstantiate = carTiles[y - 2];
-			GameObject instance =
-				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
-			instance.transform.SetParent (boardHolder);
+			for (int j = 1; j < 2; j++ ) {
+				GameObject instance =
+					Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
+				instance.transform.SetParent (boardHolder);
+				Vector3 originPosition = instance.transform.position;
+				littleCarPink script = instance.transform.GetComponent<littleCarPink> as littleCarPink;
+				script.initialize (j);
+			}
 		}
 
 		for (int y = 7; y < 12; y++) {
