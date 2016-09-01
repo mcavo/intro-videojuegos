@@ -84,10 +84,10 @@ public class chicken : MonoBehaviour {
 
 	private void addingTextStyle() {
 		//Adding fotmat style to text
-		Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+		Font BitMapFont = Resources.Load("Fonts/Masaaki-Regular", typeof(Font)) as Font;  
 		scoreText.alignment = TextAnchor.MiddleCenter;
 		scoreText.color = Color.white;
-		scoreText.font = ArialFont;
+		scoreText.font = BitMapFont;
 		scoreText.horizontalOverflow = HorizontalWrapMode.Overflow;
 		scoreText.verticalOverflow = VerticalWrapMode.Overflow;
 	}

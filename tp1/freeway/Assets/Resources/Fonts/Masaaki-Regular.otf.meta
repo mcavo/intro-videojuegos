@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e44265a89bca845ce8d1d7073bbc79d7
-timeCreated: 1471916888
+guid: ded0f8c08664f40429b5e0c51780646e
+timeCreated: 1471796717
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
@@ -10,7 +10,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Masaaki
+  - Masaaki-Regular
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

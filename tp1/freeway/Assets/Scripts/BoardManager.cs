@@ -148,10 +148,10 @@ public class BoardManager : MonoBehaviour {
 
 	private void addingTextStyle() {
 		//Adding fotmat style to text
-		Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+		Font BitMapFont = Resources.Load("Fonts/Masaaki-Regular", typeof(Font)) as Font;  
 		timeText.alignment = TextAnchor.MiddleCenter;
 		timeText.color = Color.white;
-		timeText.font = ArialFont;
+		timeText.font = BitMapFont;
 		timeText.horizontalOverflow = HorizontalWrapMode.Overflow;
 		timeText.verticalOverflow = VerticalWrapMode.Overflow;
 	}
