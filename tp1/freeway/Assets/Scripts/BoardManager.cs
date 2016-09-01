@@ -23,6 +23,7 @@ public class BoardManager : MonoBehaviour {
 
 	private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 	private Canvas canvas;
+	private float correctionFactor = 0.10f;
 
 	//Sets up the outer walls and floor (background) of the game board.
 	void BoardSetup () {
@@ -142,7 +143,7 @@ public class BoardManager : MonoBehaviour {
 		Camera camera = GameObject.Find ("Main Camera").GetComponent<Camera>();
 		int newSize = Screen.height / 11;
 		timeText.fontSize = newSize;
-		Vector3 cameraPosition = camera.WorldToScreenPoint (new Vector3(9f*assetsSize, 13f*assetsSize, 0));
+		Vector3 cameraPosition = camera.WorldToScreenPoint (new Vector3(9f*assetsSize, 13f*assetsSize + correctionFactor, 0));
 		timeText.rectTransform.anchoredPosition = new Vector2 (cameraPosition.x, cameraPosition.y);
 	}
 

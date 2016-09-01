@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CarManager : MonoBehaviour {
 	public static float assetsSize = 0.36f;
-	public float speed = 1f;
+	public float speed;
 	public float initialDistance;
 	public int difficult = 1;
 	public int numberInRows = 1;
@@ -11,8 +11,10 @@ public class CarManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-//		initialPosition = new Vector3 (initialPosition.x*assetsSize, initialPosition.y*assetsSize, 0);
-//		transform.position = initialPosition;
+		// Cars from roads 0 to 4
+		if (speed < 0) {
+			this.transform.Rotate (new Vector3 (0, 180f, 0));
+		}
 	}
 
 	// Update is called once per frame

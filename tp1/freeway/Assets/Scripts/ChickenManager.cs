@@ -8,8 +8,10 @@ public class ChickenManager : MonoBehaviour {
 	public Vector3 initialPosition;
 	public KeyCode upKey;
 	public KeyCode downKey;
-	private Text scoreText;
+	public AudioClip crushSound;
+//	public AudioClip arriveSound;
 
+	private Text scoreText;
 	private RectTransform rectTransform;
 	private int score;
 	private Canvas canvas;
@@ -45,6 +47,7 @@ public class ChickenManager : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col2d) {
 		if (col2d.tag.Equals ("LittlePinkCar")) {
 			transform.position = initialPosition;
+			SoundManager.instance.PlaySingle (crushSound);
 		}
 
 		if (col2d.tag.Equals("EndRoad")) {
