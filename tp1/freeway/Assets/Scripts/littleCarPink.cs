@@ -30,11 +30,11 @@ public class littleCarPink : MonoBehaviour {
 	private void checkBoundaries() {
 		//x = 0 is the mid of the screen
 		if (speed*difficult > 0) {
-			if (transform.position.x < 0) { 
+			if (transform.position.x < -3*assetsSize) { 
 				transform.position = new Vector3 ((17 + initialDistance)*assetsSize, transform.position.y, transform.position.z);
 			}
 		} else {
-			if (transform.position.x > 17*assetsSize) { 
+			if (transform.position.x > 20*assetsSize) { 
 				transform.position = new Vector3 ((0 - initialDistance), transform.position.y, transform.position.z);
 			}
 		}
