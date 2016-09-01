@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class chicken : MonoBehaviour {
+public class ChickenManager : MonoBehaviour {
 	public float speed = 0.05f;
 	public static float assetsSize = 0.36f;
 	public Vector3 initialPosition;

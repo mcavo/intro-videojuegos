@@ -99,14 +99,14 @@ public class BoardManager : MonoBehaviour {
 			GameObject instance =
 				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 			instance.transform.SetParent (boardHolder);
-			littleCarPink script = instance.GetComponent<littleCarPink>();
+			CarManager script = instance.GetComponent<CarManager>();
 			script.initialize (1);
 			if (script.numberInRows > 1) {
 				for (int j = 2; j <= script.numberInRows; j++ ) {
 					instance =
 						Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (boardHolder);
-					script = instance.GetComponent<littleCarPink>();
+					script = instance.GetComponent<CarManager>();
 					script.initialize (j);
 				}	
 			}

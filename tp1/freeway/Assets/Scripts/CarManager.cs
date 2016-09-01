@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class littleCarPink : MonoBehaviour {
+public class CarManager : MonoBehaviour {
 	public static float assetsSize = 0.36f;
 	public float speed = 1f;
 	public float initialDistance;
