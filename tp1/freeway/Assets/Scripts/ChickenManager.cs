@@ -9,7 +9,7 @@ public class ChickenManager : MonoBehaviour {
 	public KeyCode upKey;
 	public KeyCode downKey;
 	public AudioClip crushSound;
-//	public AudioClip arriveSound;
+	public AudioClip arriveSound;
 
 	private Text scoreText;
 	private RectTransform rectTransform;
@@ -53,6 +53,7 @@ public class ChickenManager : MonoBehaviour {
 		if (col2d.tag.Equals("EndRoad")) {
 			transform.position = initialPosition;
 			score++;
+			SoundManager.instance.PlaySingle (arriveSound);
 			SetScoreText ();
 		}
 	}

@@ -16,6 +16,7 @@ public class BoardManager : MonoBehaviour {
 	// 5 = grey with a yellow line on bottom
 	// 6 = grass -> where the chicken has to arrive
 	public GameObject[] floorTiles;									//Vector with different types of floors.
+	public GameObject blackCover;
 	public GameObject[] carTiles;								//Vector with different types of cars.
 	public GameObject[] chickens;									//Vector with different players
 
@@ -29,12 +30,13 @@ public class BoardManager : MonoBehaviour {
 	void BoardSetup () {
 		//Instantiate Board and set boardHolder to its transform.
 		boardHolder = new GameObject ("Board").transform;
+		GameObject toInstantiate;
 
 		for(int x = 0; x < columns; x++) {
 			//Asign empty floors = 0
 			//Choose a random tile from our array of floor tile prefabs and prepare to instantiate it.
-			GameObject toInstantiate = floorTiles[0];
 			//Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
+			toInstantiate = floorTiles[0];
 			GameObject instance0 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 0f, 0f), Quaternion.identity) as GameObject;
 			toInstantiate = floorTiles[1];
@@ -86,6 +88,14 @@ public class BoardManager : MonoBehaviour {
 
 			instance12.transform.SetParent (boardHolder);
 			instance13.transform.SetParent (boardHolder);
+
+			GameObject coverInstanceLeft =
+				Instantiate (blackCover, new Vector3 (-3.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
+			coverInstanceLeft.transform.SetParent (boardHolder);
+
+			GameObject coverInstanceRight =
+				Instantiate (blackCover, new Vector3 (20.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
+			coverInstanceRight.transform.SetParent (boardHolder);
 		}
 		initializeText();
 	}
