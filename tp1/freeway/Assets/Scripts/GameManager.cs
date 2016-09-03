@@ -7,11 +7,21 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager instance = null;				//Static instance of GameManager which allows it to be accessed by any other script.
 	private BoardManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-	public float timeLeft = 25.0F;
+	public float timeLeft = 5.0F;
+	public AudioClip TickTockSound;
+
+	private BlinkingText blinkScript;
+	private GameObject timeText;
+	[HideInInspector] private bool blinking;
+	[HideInInspector] private bool endgame;
+	[HideInInspector] public bool destroyOnLevel = false;
+
+	public int[] scores;
 
 	// Use this for initialization
 	void Awake () {
-		
+		blinking = false;
+		endgame = false;
 		//Check if instance already exists
 		if (instance == null) {
 			//if not, set instance to this
@@ -24,7 +34,6 @@ public class GameManager : MonoBehaviour {
 			Destroy (gameObject);	
 		}
 
-		//Sets this to not be destroyed when reloading scene
 		DontDestroyOnLoad(gameObject);
 
 		//Get a component reference to the attached BoardManager script
@@ -35,14 +44,24 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Update() {
-		double oldTime = System.Math.Round(timeLeft,2);
-		timeLeft -= Time.deltaTime / 4;
-		double newTime = System.Math.Round(timeLeft,2);
-		if (oldTime - newTime != 0) {
-			boardScript.timeText.text = string.Format ("{0}", newTime.ToString("F2"));
-
-		}	
-		validateGameOver ();
+		if (destroyOnLevel) {
+			Destroy (gameObject);
+		}
+		if (!endgame) {
+			double oldTime = System.Math.Round (timeLeft, 2);
+			timeLeft -= Time.deltaTime / 4;
+			double newTime = System.Math.Round (timeLeft, 2);
+			if (!blinking && newTime < 5) {
+				blinking = true;
+				timeText = GameObject.Find ("TimeText");
+				timeText.AddComponent <BlinkingColorText> ();
+				SoundManager.instance.PlayLoop (TickTockSound);
+			}
+			if (oldTime - newTime != 0) {
+				boardScript.timeText.text = string.Format ("{0}", newTime.ToString ("F2"));
+			}	
+			validateGameOver ();
+		}
 	}
 
 	//Initializes the game for each level.
@@ -54,7 +73,9 @@ public class GameManager : MonoBehaviour {
 	private void validateGameOver() {
 		if (timeLeft < 0) {
 			Debug.Log ("Game Over");
+			endgame = true;
 			// Here we should show the initial menu
+			SceneManager.LoadScene ("GameOver");
 		}
 	}
 }

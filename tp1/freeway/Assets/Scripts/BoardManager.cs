@@ -23,7 +23,8 @@ public class BoardManager : MonoBehaviour {
 	public Text timeText;
 
 	private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
-	private Transform carsHolder;
+	private Transform carsHolder;									//A variable to store a reference to the transform of our Cars objects.
+	private Transform chickensHolder;								//A variable to store a reference to the transform of our Chickens objects.
 	private Canvas canvas;
 	private float correctionFactor = 0.10f;
 
@@ -97,7 +98,7 @@ public class BoardManager : MonoBehaviour {
 				Instantiate (blackCover, new Vector3 (20.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
 			coverInstanceRight.transform.SetParent (boardHolder);
 		}
-		initializeText();
+		initializeText("TimeText");
 	}
 
 	//SetupScene initializes our diffculty and calls the previous functions to lay out the game board
@@ -123,19 +124,20 @@ public class BoardManager : MonoBehaviour {
 				}	
 			}
 		}
-			
+
+		chickensHolder = new GameObject ("Chickens").transform;
 		// Initialize players
 		for (int i = 0; i < chickens.Length; i++) {
 			GameObject chickenInstance = Instantiate (chickens[i], new Vector3 (0f, 0f, 0f), Quaternion.identity) as GameObject;
-			chickenInstance.transform.SetParent (boardHolder);
+			chickenInstance.transform.SetParent (chickensHolder);
 		}
-
+		GameManager.instance.scores = new int[chickens.Length];
 		//Creates the outer walls and floor.
 		BoardSetup ();
 	}
 
-	private void initializeText() {
-		GameObject timeGameObject = new GameObject("TextScore");
+	private void initializeText(string name) {
+		GameObject timeGameObject = new GameObject(name);
 		canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
 
 		timeGameObject.transform.SetParent(canvas.transform, false);
@@ -160,7 +162,7 @@ public class BoardManager : MonoBehaviour {
 
 	private void addingTextStyle() {
 		//Adding fotmat style to text
-		Font BitMapFont = Resources.Load("Fonts/Masaaki-Regular", typeof(Font)) as Font;  
+		Font BitMapFont = Resources.Load("Masaaki-Regular", typeof(Font)) as Font;  
 		timeText.alignment = TextAnchor.MiddleCenter;
 		timeText.color = Color.white;
 		timeText.font = BitMapFont;

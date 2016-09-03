@@ -5,6 +5,7 @@ using System.Collections;
 public class ChickenManager : MonoBehaviour {
 	public float speed = 0.05f;
 	public static float assetsSize = 0.36f;
+	public int index;
 	public Vector3 initialPosition;
 	public KeyCode upKey;
 	public KeyCode downKey;
@@ -21,7 +22,7 @@ public class ChickenManager : MonoBehaviour {
 	void Start () {
 		initialPosition = assetsSize*initialPosition;
 		score = 0;
-		initializeText();
+		initializeText("ScoreText");
 		SetScoreText();
 		transform.position = initialPosition;
 	}
@@ -55,6 +56,7 @@ public class ChickenManager : MonoBehaviour {
 			score++;
 			SoundManager.instance.PlaySingle (arriveSound);
 			SetScoreText ();
+			GameManager.instance.scores [index] = score;
 		}
 	}
 
@@ -62,8 +64,8 @@ public class ChickenManager : MonoBehaviour {
 		scoreText.text = score.ToString ();
 	}
 
-	private void initializeText() {
-		GameObject scoreT = new GameObject("TextScore");
+	private void initializeText(string name) {
+		GameObject scoreT = new GameObject(name);
 		canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
 
 		scoreT.transform.SetParent(canvas.transform, false);
@@ -88,7 +90,7 @@ public class ChickenManager : MonoBehaviour {
 
 	private void addingTextStyle() {
 		//Adding fotmat style to text
-		Font BitMapFont = Resources.Load("Fonts/Masaaki-Regular", typeof(Font)) as Font;  
+		Font BitMapFont = Resources.Load("Masaaki-Regular", typeof(Font)) as Font;  
 		scoreText.alignment = TextAnchor.MiddleCenter;
 		scoreText.color = Color.white;
 		scoreText.font = BitMapFont;
