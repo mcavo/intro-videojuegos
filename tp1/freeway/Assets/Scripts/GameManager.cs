@@ -47,7 +47,6 @@ public class GameManager : MonoBehaviour {
 
 	//Initializes the game for each level.
 	void InitGame() {
-		
 		//Call the SetupScene function of the BoardManager script, pass it current difficulty number.
 		boardScript.SetupScene(0); //TODO: change difficulty from menu.
 	}

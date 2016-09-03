@@ -23,6 +23,7 @@ public class BoardManager : MonoBehaviour {
 	public Text timeText;
 
 	private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
+	private Transform carsHolder;
 	private Canvas canvas;
 	private float correctionFactor = 0.10f;
 
@@ -39,19 +40,27 @@ public class BoardManager : MonoBehaviour {
 			toInstantiate = floorTiles[0];
 			GameObject instance0 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 0f, 0f), Quaternion.identity) as GameObject;
+			instance0.transform.SetParent (boardHolder);
+
 			toInstantiate = floorTiles[1];
 			GameObject instance1 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 1f*assetsSize, 0f), Quaternion.identity) as GameObject;
+			instance1.transform.SetParent (boardHolder);
+
 			toInstantiate = floorTiles[2];
 			GameObject instance2 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 2f*assetsSize, 0f), Quaternion.identity) as GameObject;
+			instance2.transform.SetParent (boardHolder);
+
 			toInstantiate = floorTiles[6];
 			GameObject instance12 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 12f*assetsSize, 0f), Quaternion.Euler(new Vector3 (0, 0, 180f))) as GameObject;
+			instance12.transform.SetParent (boardHolder);
 
 			toInstantiate = floorTiles[0];
 			GameObject instance13 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 13f*assetsSize, 0f), Quaternion.identity) as GameObject;
+			instance13.transform.SetParent (boardHolder);
 
 			//Assign one white line = 2
 			for (int y = 3; y < 6; y++) {
@@ -72,22 +81,13 @@ public class BoardManager : MonoBehaviour {
 			toInstantiate = floorTiles[4];
 			GameObject instance6 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 6*assetsSize, 0f), Quaternion.identity) as GameObject;	
-
+			instance6.transform.SetParent (boardHolder);
 			//Assign both lines = 1
 			toInstantiate = floorTiles[5];
 			GameObject instance7 =
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 7*assetsSize, 0f), Quaternion.identity) as GameObject;	
-
-			//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
-			instance0.transform.SetParent (boardHolder);
-			instance1.transform.SetParent (boardHolder);
-			instance2.transform.SetParent (boardHolder);
-
-			instance6.transform.SetParent (boardHolder);
 			instance7.transform.SetParent (boardHolder);
-
-			instance12.transform.SetParent (boardHolder);
-			instance13.transform.SetParent (boardHolder);
+			//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
 
 			GameObject coverInstanceLeft =
 				Instantiate (blackCover, new Vector3 (-3.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
@@ -105,18 +105,19 @@ public class BoardManager : MonoBehaviour {
 		GameObject toInstantiate;
 		//TODO: Ask order layers
 		//TODO: modify difficulty later
+		carsHolder = new GameObject ("Cars").transform;
 		for (int y = 2; y < 12; y++) {
 			toInstantiate = carTiles[y - 2];
 			GameObject instance =
 				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
-			instance.transform.SetParent (boardHolder);
+			instance.transform.SetParent (carsHolder);
 			CarManager script = instance.GetComponent<CarManager>();
 			script.initialize (1);
 			if (script.numberInRows > 1) {
 				for (int j = 2; j <= script.numberInRows; j++ ) {
 					instance =
 						Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
-					instance.transform.SetParent (boardHolder);
+					instance.transform.SetParent (carsHolder);
 					script = instance.GetComponent<CarManager>();
 					script.initialize (j);
 				}	
