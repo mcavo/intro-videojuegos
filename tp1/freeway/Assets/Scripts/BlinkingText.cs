@@ -4,35 +4,39 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class BlinkingText : MonoBehaviour {
+public class BlinkingText : MonoBehaviour
+{
 
-	Text Blinking;
+	public bool isBlinking;
 
+	private Text Blinking;
 	private string BlinkText;
 	private string BlankText;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		Blinking = GetComponent<Text>();
 		BlinkText = Blinking.text;
 		BlankText = "";
-
-		StartCoroutine(TextoParpadeo());
+		isBlinking = true;
+		StartCoroutine(MakeItBlink());
 	}
 
-	public IEnumerator TextoParpadeo()
+	public IEnumerator MakeItBlink()
 	{
-		//el parpadeo sera infinito hasta que termine la condicion dependiendo tu eleccion
-		while(true)
+		while(isBlinking)
 		{
-			//Establecemos nuestro texto en blanco
+			// Shows the blank text
 			Blinking.text = BlankText;
 
-			//mostramos el texto en blanco por 0.3 segundos
+			// Waits for 0.3 seconds
 			yield return new WaitForSeconds(.3f);
 
-			//mostramos nuestro texto en mi caso Depredador1220 por otros 0.5 segundos
+			// Shows the original text
 			Blinking.text = BlinkText;
+
+			// Waits for 0.5 seconds
 			yield return new WaitForSeconds(.5f);
 		}
 	}

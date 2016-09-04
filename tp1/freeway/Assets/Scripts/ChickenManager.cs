@@ -2,7 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class ChickenManager : MonoBehaviour {
+public class ChickenManager : MonoBehaviour
+{
 	public float speed = 0.05f;
 	public static float assetsSize = 0.36f;
 	public int index;
@@ -19,7 +20,8 @@ public class ChickenManager : MonoBehaviour {
 	private float correctionFactor = 0.10f;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		initialPosition = assetsSize*initialPosition;
 		score = 0;
 		initializeText("ScoreText");
@@ -28,30 +30,41 @@ public class ChickenManager : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		checkInput ();
 	}
 
-	private void checkInput() {
+	private void checkInput()
+	{
 		Vector3 currentPosition = transform.position;
-		if (Input.GetKey(upKey)) {
+		if (Input.GetKey(upKey))
+		{
 			transform.position = new Vector3 (currentPosition.x, currentPosition.y + speed, currentPosition.z);			
-		} else if (Input.GetKey(downKey)) {
-			if (currentPosition.y - speed < 1f * assetsSize) {
+		} 
+		else if (Input.GetKey(downKey))
+		{
+			if (currentPosition.y - speed < 1f * assetsSize)
+			{
 				transform.position = initialPosition;
-			} else {
+			}
+			else
+			{
 				transform.position = new Vector3 (currentPosition.x, currentPosition.y - speed, currentPosition.z);
 			}
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D col2d) {
-		if (col2d.tag.Equals ("LittlePinkCar")) {
+	void OnTriggerEnter2D(Collider2D col2d)
+	{
+		if (col2d.tag.Equals ("LittlePinkCar"))
+		{
 			transform.position = initialPosition;
 			SoundManager.instance.PlaySingle (crushSound);
 		}
 
-		if (col2d.tag.Equals("EndRoad")) {
+		if (col2d.tag.Equals("EndRoad"))
+		{
 			transform.position = initialPosition;
 			score++;
 			SoundManager.instance.PlaySingle (arriveSound);
@@ -60,11 +73,13 @@ public class ChickenManager : MonoBehaviour {
 		}
 	}
 
-	private void SetScoreText() {
+	private void SetScoreText()
+	{
 		scoreText.text = score.ToString ();
 	}
 
-	private void initializeText(string name) {
+	private void initializeText(string name)
+	{
 		GameObject scoreT = new GameObject(name);
 		canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
 
@@ -80,7 +95,8 @@ public class ChickenManager : MonoBehaviour {
 		updateTextDimensionAndPosition ();
 	}
 
-	private void updateTextDimensionAndPosition () {
+	private void updateTextDimensionAndPosition ()
+	{
 		Camera camera = GameObject.Find ("Main Camera").GetComponent<Camera>();
 		int newSize = Screen.height / 10;
 		scoreText.fontSize = newSize;
@@ -88,7 +104,8 @@ public class ChickenManager : MonoBehaviour {
 		scoreText.rectTransform.anchoredPosition = new Vector2(cameraPosition.x, cameraPosition.y);
 	}
 
-	private void addingTextStyle() {
+	private void addingTextStyle()
+	{
 		//Adding fotmat style to text
 		Font BitMapFont = Resources.Load("Masaaki-Regular", typeof(Font)) as Font;  
 		scoreText.alignment = TextAnchor.MiddleCenter;
@@ -98,7 +115,8 @@ public class ChickenManager : MonoBehaviour {
 		scoreText.verticalOverflow = VerticalWrapMode.Overflow;
 	}
 
-	private void settingAnchor(RectTransform trans) {
+	private void settingAnchor(RectTransform trans)
+	{
 		//Set anchor in the bottom left corner
 		trans.anchorMax = new Vector2 (0f, 0f);
 		trans.anchorMin = new Vector2 (0f, 0f);

@@ -2,8 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class BoardManager : MonoBehaviour {
-
+public class BoardManager : MonoBehaviour
+{
 	public int columns = 18; 										//Number of columns in our game board.
 	public int rows = 14;											//Number of rows in our game board.
 	public static float assetsSize = 0.36f;
@@ -29,12 +29,14 @@ public class BoardManager : MonoBehaviour {
 	private float correctionFactor = 0.10f;
 
 	//Sets up the outer walls and floor (background) of the game board.
-	void BoardSetup () {
+	void BoardSetup ()
+	{
 		//Instantiate Board and set boardHolder to its transform.
 		boardHolder = new GameObject ("Board").transform;
 		GameObject toInstantiate;
 
-		for(int x = 0; x < columns; x++) {
+		for(int x = 0; x < columns; x++)
+		{
 			//Asign empty floors = 0
 			//Choose a random tile from our array of floor tile prefabs and prepare to instantiate it.
 			//Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
@@ -64,14 +66,16 @@ public class BoardManager : MonoBehaviour {
 			instance13.transform.SetParent (boardHolder);
 
 			//Assign one white line = 2
-			for (int y = 3; y < 6; y++) {
+			for (int y = 3; y < 6; y++)
+			{
 				toInstantiate = floorTiles[3];
 				GameObject instance =
 					Instantiate (toInstantiate, new Vector3 (x*assetsSize, y*assetsSize, 0f), Quaternion.identity) as GameObject;	
 				instance.transform.SetParent (boardHolder);	
 			}
 
-			for (int y = 8; y < 12; y++) {
+			for (int y = 8; y < 12; y++)
+			{
 				toInstantiate = floorTiles[3];
 				GameObject instance =
 					Instantiate (toInstantiate, new Vector3 (x*assetsSize, y*assetsSize, 0f), Quaternion.identity) as GameObject;	
@@ -89,33 +93,36 @@ public class BoardManager : MonoBehaviour {
 				Instantiate (toInstantiate, new Vector3 (x*assetsSize, 7*assetsSize, 0f), Quaternion.identity) as GameObject;	
 			instance7.transform.SetParent (boardHolder);
 			//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
-
-			GameObject coverInstanceLeft =
-				Instantiate (blackCover, new Vector3 (-3.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
-			coverInstanceLeft.transform.SetParent (boardHolder);
-
-			GameObject coverInstanceRight =
-				Instantiate (blackCover, new Vector3 (20.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
-			coverInstanceRight.transform.SetParent (boardHolder);
 		}
+
+		GameObject coverInstanceLeft =
+			Instantiate (blackCover, new Vector3 (-3.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
+		coverInstanceLeft.transform.SetParent (boardHolder);
+
+		GameObject coverInstanceRight =
+			Instantiate (blackCover, new Vector3 (20.5f * assetsSize, 6.5f * assetsSize, -1f), Quaternion.identity) as GameObject;
+		coverInstanceRight.transform.SetParent (boardHolder);
+
 		initializeText("TimeText");
 	}
 
 	//SetupScene initializes our diffculty and calls the previous functions to lay out the game board
-	public void SetupScene (int diffculty) {
+	public void SetupScene (int diffculty)
+	{
 		GameObject toInstantiate;
-		//TODO: Ask order layers
-		//TODO: modify difficulty later
 		carsHolder = new GameObject ("Cars").transform;
-		for (int y = 2; y < 12; y++) {
+		for (int y = 2; y < 12; y++)
+		{
 			toInstantiate = carTiles[y - 2];
 			GameObject instance =
 				Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 			instance.transform.SetParent (carsHolder);
 			CarManager script = instance.GetComponent<CarManager>();
 			script.initialize (1);
-			if (script.numberInRows > 1) {
-				for (int j = 2; j <= script.numberInRows; j++ ) {
+			if (script.numberInRows > 1)
+			{
+				for (int j = 2; j <= script.numberInRows; j++ )
+				{
 					instance =
 						Instantiate (toInstantiate, new Vector3 (0, y*assetsSize, 0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (carsHolder);
@@ -127,7 +134,8 @@ public class BoardManager : MonoBehaviour {
 
 		chickensHolder = new GameObject ("Chickens").transform;
 		// Initialize players
-		for (int i = 0; i < chickens.Length; i++) {
+		for (int i = 0; i < chickens.Length; i++)
+		{
 			GameObject chickenInstance = Instantiate (chickens[i], new Vector3 (0f, 0f, 0f), Quaternion.identity) as GameObject;
 			chickenInstance.transform.SetParent (chickensHolder);
 		}
@@ -136,7 +144,8 @@ public class BoardManager : MonoBehaviour {
 		BoardSetup ();
 	}
 
-	private void initializeText(string name) {
+	private void initializeText(string name)
+	{
 		GameObject timeGameObject = new GameObject(name);
 		canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
 
@@ -152,7 +161,8 @@ public class BoardManager : MonoBehaviour {
 		updateTextDimensionAndPosition ();
 	}
 
-	private void updateTextDimensionAndPosition () {
+	private void updateTextDimensionAndPosition ()
+	{
 		Camera camera = GameObject.Find ("Main Camera").GetComponent<Camera>();
 		int newSize = Screen.height / 11;
 		timeText.fontSize = newSize;
@@ -160,7 +170,8 @@ public class BoardManager : MonoBehaviour {
 		timeText.rectTransform.anchoredPosition = new Vector2 (cameraPosition.x, cameraPosition.y);
 	}
 
-	private void addingTextStyle() {
+	private void addingTextStyle()
+	{
 		//Adding fotmat style to text
 		Font BitMapFont = Resources.Load("Masaaki-Regular", typeof(Font)) as Font;  
 		timeText.alignment = TextAnchor.MiddleCenter;
@@ -170,7 +181,8 @@ public class BoardManager : MonoBehaviour {
 		timeText.verticalOverflow = VerticalWrapMode.Overflow;
 	}
 
-	private void settingAnchor(RectTransform trans) {
+	private void settingAnchor(RectTransform trans)
+	{
 		//Set anchor in the bottom left corner
 		trans.anchorMax = new Vector2 (0f, 0f);
 		trans.anchorMin = new Vector2 (0f, 0f);
