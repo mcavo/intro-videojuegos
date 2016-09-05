@@ -57,7 +57,7 @@ public class ChickenManager : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D col2d)
 	{
-		if (col2d.tag.Equals ("LittlePinkCar"))
+		if (col2d.tag.Equals ("Car"))
 		{
 			transform.position = initialPosition;
 			SoundManager.instance.PlaySingle (crushSound);

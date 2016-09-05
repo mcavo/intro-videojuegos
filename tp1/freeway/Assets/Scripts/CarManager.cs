@@ -14,7 +14,7 @@ public class CarManager : MonoBehaviour
 	void Start ()
 	{
 		// Cars from roads 0 to 4
-		if (speed < 0) {
+		if (speed > 0) {
 			this.transform.Rotate (new Vector3 (0, 180f, 0));
 		}
 	}
