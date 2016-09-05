@@ -27,7 +27,7 @@ public class MainLoader : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.Space))
 		{
-			SceneManager.LoadScene ("Play");	
+			SceneManager.LoadScene ("Controls");	
 		} 
 	}
 }
