@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
 
 	private BoardManager boardScript;						// Store a reference to our BoardManager.
 	private BlinkingText blinkScript;						// Store a reference to our BlinkingText script;
-	private GameObject timeText;							// Store a reference to the text that shows the remaining time.
 	private bool isBlinking;
 	private bool endgame;
 
@@ -64,8 +63,8 @@ public class GameManager : MonoBehaviour
 				// Set a flag so it doesnt add the same script to the time text several times
 				isBlinking = true;
 				// Changes the time text color, so the users advice the game is about to end
-				timeText = GameObject.Find ("TimeText");
-				timeText.AddComponent <BlinkingColorText> ();
+				boardScript.timeText.gameObject.AddComponent <BlinkingColorText> ();
+
 				// Plays an annoying Tick Tock sound
 				SoundManager.instance.PlayLoop (TickTockSound);
 			}
