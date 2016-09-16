@@ -8,6 +8,8 @@ public class MovingObject : MonoBehaviour {
 	private Rigidbody rb;               //The Rigidbody2D component attached to this object.
 	private float inverseMoveTime;          //Used to make movement more efficient.
 
+	private bool moving;
+
 	//Protected, virtual functions can be overridden by inheriting classes.
 	protected virtual void Start ()
 	{
@@ -19,32 +21,38 @@ public class MovingObject : MonoBehaviour {
 
 		//By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
 		inverseMoveTime = 1f / moveTime;
+
+		moving = false;
 	}
 		
 	//Move returns true if it is able to move and false if not. 
 	//Move takes parameters for x direction, y direction, z direction and a RaycastHit2D to check collision.
 	protected void Move (int xDir, int yDir, int zDir)
 	{
-		//Store start position to move from, based on objects current transform position.
-		Vector3 start = transform.position;
+		if (!moving) {
+			moving = true;
+			//Store start position to move from, based on objects current transform position.
+			Vector3 start = transform.position;
 
-		// Calculate end position based on the direction parameters passed in when calling Move.
-		Vector3 end = start + new Vector3 (xDir, yDir, zDir);
-		Debug.Log (start.x);
-		Debug.Log (xDir);
-		Debug.Log ("Me muevo a: " + end.x + " " + end.y + " " + end.z);
+			// Calculate end position based on the direction parameters passed in when calling Move.
+			Vector3 end = start + new Vector3 (xDir, yDir, zDir);
+			Debug.Log ("Estoy en: " + start.x + " " + start.y + " " + start.z);
+			Debug.Log (xDir);
+			Debug.Log ("Me muevo a: " + end.x + " " + end.y + " " + end.z);
 
-		//Disable the boxCollider so that linecast doesn't hit this object's own collider.
-		//boxCollider.enabled = false;
+			//Disable the boxCollider so that linecast doesn't hit this object's own collider.
+			//boxCollider.enabled = false;
 
-		//Cast a line from start point to end point checking collision on blockingLayer.
-		//hit = Physics2D.Linecast (start, end);
+			//Cast a line from start point to end point checking collision on blockingLayer.
+			//hit = Physics2D.Linecast (start, end);
 
-		//Re-enable boxCollider after linecast
-		//boxCollider.enabled = true;
+			//Re-enable boxCollider after linecast
+			//boxCollider.enabled = true;
 
-		//start SmoothMovement co-routine passing in the Vector2 end as destination
-		StartCoroutine (SmoothMovement (end));
+			//start SmoothMovement co-routine passing in the Vector2 end as destination
+			StartCoroutine (SmoothMovement (end));
+			moving = false;
+		}
 
 	}
 
@@ -55,8 +63,8 @@ public class MovingObject : MonoBehaviour {
 		//Calculate the remaining distance to move based on the square magnitude of the difference between current position and end parameter. 
 		//Square magnitude is used instead of magnitude because it's computationally cheaper.
 		float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
-		Debug.Log ("End: " + end.x + " " + end.z);
-		Debug.Log ("Remaining: " + sqrRemainingDistance);
+//		Debug.Log ("End: " + end.x + " " + end.z);
+//		Debug.Log ("Remaining: " + sqrRemainingDistance);
 		//While that distance is greater than a very small amount (Epsilon, almost zero):
 		while(sqrRemainingDistance > float.Epsilon)
 		{

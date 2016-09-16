@@ -5,8 +5,8 @@ public class Pacman : MovingObject {
 	private int[] dirCurrent;
 	private int[] dirNext;
 
-	private int[] UP = new int[2] {0,-1};
-	private int[] DOWN = new int[2] {0,1};
+	private int[] UP = new int[2] {0,1};
+	private int[] DOWN = new int[2] {0,-1};
 	private int[] RIGHT = new int[2] {1,0};
 	private int[] LEFT = new int[2] {-1,0};
 	//private int[] NO_DIRECTION = new int[2] {0,0};
@@ -31,7 +31,7 @@ public class Pacman : MovingObject {
 	void Update () {
 		CheckInput ();
 		UpdateDirection ();
-		AttemptMove (movementOffset * dirCurrent [0], 0, movementOffset * dirCurrent [1]);
+//		AttemptMove (movementOffset * dirCurrent [0], 0, movementOffset * dirCurrent [1]);
 	}
 
 	void CheckInput() {
@@ -39,18 +39,22 @@ public class Pacman : MovingObject {
 			dirNext = UP;
 			Debug.Log ("up");
 			Debug.Log (CanMove (dirNext));
+			AttemptMove (movementOffset * dirNext [0], 0, movementOffset * dirNext [1]);
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
 			dirNext = DOWN;
 			Debug.Log ("down");
 			Debug.Log (CanMove (dirNext));
+			AttemptMove (movementOffset * dirNext [0], 0, movementOffset * dirNext [1]);
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			dirNext = RIGHT;
 			Debug.Log ("right");
 			Debug.Log (CanMove (dirNext));
+			AttemptMove (movementOffset * dirNext [0], 0, movementOffset * dirNext [1]);
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
 			dirNext = LEFT;
 			Debug.Log ("left");
 			Debug.Log (CanMove (dirNext));
+			AttemptMove (movementOffset * dirNext [0], 0, movementOffset * dirNext [1]);
 		}
 	}
 
