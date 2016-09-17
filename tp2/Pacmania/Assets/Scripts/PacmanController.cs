@@ -61,22 +61,16 @@ public class PacmanController : MonoBehaviour {
 		var isMoving = true;
 		var isDead = animator.GetBool ("IsDead");
 
-		int[] h = GetBoardPosition (transform.position);
-
 		if (isDead) {
 			isMoving = false;
 		} else if (Input.GetKey(KeyCode.UpArrow)) {
 			nextDirection = up;
-			Debug.Log ("up");
 		} else if (Input.GetKey(KeyCode.DownArrow)) {
 			nextDirection = down;
-			Debug.Log ("down");
 		} else if (Input.GetKey(KeyCode.RightArrow)) {
 			nextDirection = right;
-			Debug.Log ("right");
 		} else if (Input.GetKey(KeyCode.LeftArrow)) {
 			nextDirection = left;
-			Debug.Log ("left");
 		}
 
 		if (AtCheckPoint ()) {
