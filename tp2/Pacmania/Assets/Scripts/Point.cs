@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PointScript : MonoBehaviour
+public class Point : MonoBehaviour
 {
 	void OnTriggerEnter(Collider col)
 	{
