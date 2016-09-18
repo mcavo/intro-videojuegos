@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: f02ca27474db5459380007990584c409
-timeCreated: 1474166467
+guid: cb207000f004c4708a9321d7925b609d
+timeCreated: 1474166704
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -8,22 +8,20 @@ ModelImporter:
     100000: Cylinder
     100002: //RootNode
     100004: Sphere
-    100006: Sphere_001
+    100006: Sphere.001
     400000: Cylinder
     400002: //RootNode
     400004: Sphere
-    400006: Sphere_001
+    400006: Sphere.001
     2300000: Cylinder
     2300002: Sphere
-    2300004: Sphere_001
+    2300004: Sphere.001
     3300000: Cylinder
     3300002: Sphere
-    3300004: Sphere_001
-    4300000: Sphere_001
+    3300004: Sphere.001
+    4300000: Sphere.001
     4300002: Sphere
     4300004: Cylinder
-    7400000: Default Take
-    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -82,7 +80,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
