@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GhostController : MonoBehaviour {
+public class GhostController : ObserverPattern.Observer {
 
 	private System.Random rnd = new System.Random(new System.DateTime().Millisecond);
 	public float MovementSpeed = 10f;
@@ -78,6 +78,7 @@ public class GhostController : MonoBehaviour {
 	void Start() {
 		QualitySettings.vSyncCount = 0;
 		Reset();
+		ObserverPattern.Subject.getInstance ().AddObserver (this); //Subscribe to notification
 	}
 
 	void Update() {
@@ -101,6 +102,10 @@ public class GhostController : MonoBehaviour {
 
 	private Vector3 RoundVector3 ( Vector3 v, int decimals) {
 		return new Vector3 ((float)System.Math.Round (v.x, decimals), (float)System.Math.Round (v.y, decimals), (float)System.Math.Round (v.z, decimals));
+	}
+
+	override public void OnNotify() {
+		Debug.Log ("Hola");
 	}
 
 }
