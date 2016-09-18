@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		score = 0;
+		lives = 3;
 	}
 	
 	// Update is called once per frame
@@ -39,8 +41,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void InitGame() {
-		score = 0;
-		lives = 3;
 		// TODO : Load raycasting
 		// TODO : Desbloquear el loop y hacerlo 
 		board = new int[22, 19]
