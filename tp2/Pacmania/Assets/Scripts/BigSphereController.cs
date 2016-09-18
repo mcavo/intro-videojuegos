@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ModifyScale : MonoBehaviour {
+public class BigSphereController : MonoBehaviour {
 
 	Vector3 oldScale;
 	public Vector3 newScale = new Vector3 (1.5f, 1.5f, 1.5f);
@@ -25,6 +25,12 @@ public class ModifyScale : MonoBehaviour {
 
 			// Waits for 0.5 seconds
 			yield return new WaitForSeconds(.4f);
+		}
+	}
+
+	void OnTriggerEnter(Collider col) {
+		if (col.CompareTag("Pacman")) {
+			ObserverPattern.Subject.getInstance().Notify (); //Notify ghosts when pacman eat it
 		}
 	}
 }

@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
 	}
 	
 	// Update is called once per frame
@@ -43,6 +42,7 @@ public class GameManager : MonoBehaviour {
 		score = 0;
 		lives = 3;
 		// TODO : Load raycasting
+		// TODO : Desbloquear el loop y hacerlo 
 		board = new int[22, 19]
 			{ {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 			, {1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1}
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour {
 			, {1,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1}
 			, {1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1}
 			, {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1}
-			, {0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0}
+			, {0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,1,0,0,0}
 			, {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1}
 			, {1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1}
 			, {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1}
