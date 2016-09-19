@@ -8,6 +8,9 @@ public class GhostController : ObserverPattern.Observer {
 	private int movementOffset = 4;
 	private int[] matrixOffset = new int[2] {-37,41};
 
+	private BoxCollider boxCollider;      //The BoxCollider2D component attached to this object.
+	private Rigidbody rb;               //The Rigidbody2D component attached to this object.
+
 	private Vector3 up = Vector3.zero,
 		down = new Vector3(0,180,0),
 		right = new Vector3(0,90,0),
@@ -29,13 +32,35 @@ public class GhostController : ObserverPattern.Observer {
 
 	//TODO
 	private void UpdateDirection() {
-		
+
+		RaycastHit hit;
 		ArrayList posibleDirections = new ArrayList();
 
 		ifCanMoveAddToArrayList (up, posibleDirections);
 		ifCanMoveAddToArrayList (down, posibleDirections);
 		ifCanMoveAddToArrayList (left, posibleDirections);
 		ifCanMoveAddToArrayList (right, posibleDirections);
+
+		Vector3 curPosition = RoundVector3 (transform.position, 2);
+		Vector3 nextPosition;
+
+		transform.localEulerAngles = up;
+
+		foreach (var angle in posibleDirections) {
+			transform.localEulerAngles = (Vector3) angle;
+			//TODO: WTF. Check this numbers.
+			nextPosition = RoundVector3 (220 * 3 * movementOffset * transform.forward + transform.position, 2);
+			if (Physics.Raycast (curPosition, nextPosition, out hit)) {
+				if (hit.collider.tag == "Pacman") {
+					currentDirection = (Vector3) angle;
+					return;
+				}
+			}
+		}
+
+		//Re-enable boxCollider after raycast
+		boxCollider.enabled = true;
+
 		currentDirection = (Vector3)posibleDirections[rnd.Next(0, posibleDirections.Count)];
 
 	}
@@ -79,6 +104,10 @@ public class GhostController : ObserverPattern.Observer {
 		QualitySettings.vSyncCount = 0;
 		Reset();
 		ObserverPattern.Subject.getInstance ().AddObserver (this); //Subscribe to notification
+		//Get a component reference to this object's BoxCollider2D
+		boxCollider = GetComponent <BoxCollider> ();
+		//Get a component reference to this object's Rigidbody2D
+		rb = GetComponent <Rigidbody> ();
 	}
 
 	void Update() {
