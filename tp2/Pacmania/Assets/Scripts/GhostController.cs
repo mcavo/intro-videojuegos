@@ -1,7 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+
 public class GhostController : ObserverPattern.Observer {
+	// Set in unity
+	public Color BodyColor = new Color(0, 0, 0, 1);
+	// Black
+	public Color EyesColor = new Color(0, 0, 0, 1);
+
+	// Dark Blue
+	public Color BodyColorEatable = new Color(0.18039f, 0.14510f, 0.70196f, 1.0f);
+	// White
+	public Color EyesColorEatable = new Color(0.97647f, 0.97647f, 0.97647f, 1.0f);
 
 	private System.Random rnd = new System.Random(new System.DateTime().Millisecond);
 	public float MovementSpeed = 10f;
@@ -18,6 +29,36 @@ public class GhostController : ObserverPattern.Observer {
 		currentDirection = Vector3.zero;
 
 	private Vector3 initialPosition = new Vector3(1,-6.2f,9);
+
+	void Start() {
+		QualitySettings.vSyncCount = 0;
+		Reset();
+		ObserverPattern.Subject.getInstance ().AddObserver (this); //Subscribe to notification
+		//Get a component reference to this object's BoxCollider2D
+		boxCollider = GetComponent <BoxCollider> ();
+		//Get a component reference to this object's Rigidbody2D
+		rb = GetComponent <Rigidbody> ();
+		SetGhostColor (BodyColor, EyesColor);
+	}
+
+	void Update() {
+		var isMoving = true;
+		var isDead = false; //TODO
+
+		if (isDead) {
+			isMoving = false;
+		} 
+
+		if (AtCheckPoint ()) {
+			UpdateDirection ();
+			transform.localEulerAngles = currentDirection;
+		}
+
+
+		if (isMoving) {
+			transform.Translate(RoundVector3(Vector3.forward *(movementOffset/ MovementSpeed), 2));
+		}
+	}
 
 	public void Reset() {
 		transform.position = initialPosition;
@@ -100,41 +141,18 @@ public class GhostController : ObserverPattern.Observer {
 		return new int[2] { (int) ((position.x - matrixOffset [0]) / movementOffset), (int) ((matrixOffset [1] - position.z) / movementOffset) };
 	}
 
-	void Start() {
-		QualitySettings.vSyncCount = 0;
-		Reset();
-		ObserverPattern.Subject.getInstance ().AddObserver (this); //Subscribe to notification
-		//Get a component reference to this object's BoxCollider2D
-		boxCollider = GetComponent <BoxCollider> ();
-		//Get a component reference to this object's Rigidbody2D
-		rb = GetComponent <Rigidbody> ();
-	}
-
-	void Update() {
-		var isMoving = true;
-		var isDead = false; //TODO
-
-		if (isDead) {
-			isMoving = false;
-		} 
-
-		if (AtCheckPoint ()) {
-			UpdateDirection ();
-			transform.localEulerAngles = currentDirection;
-		}
-
-
-		if (isMoving) {
-			transform.Translate(RoundVector3(Vector3.forward *(movementOffset/ MovementSpeed), 2));
-		}
-	}
-
 	private Vector3 RoundVector3 ( Vector3 v, int decimals) {
 		return new Vector3 ((float)System.Math.Round (v.x, decimals), (float)System.Math.Round (v.y, decimals), (float)System.Math.Round (v.z, decimals));
 	}
 
 	override public void OnNotify() {
-		Debug.Log ("Hola");
+		SetGhostColor (BodyColorEatable, EyesColorEatable);
+	}
+
+	private void SetGhostColor(Color body, Color eyes) {
+		transform.GetChild(0).GetComponent<MeshRenderer>().materials[0].color = body;
+		transform.GetChild(1).GetComponent<MeshRenderer>().materials[0].color = eyes;
+		transform.GetChild(2).GetComponent<MeshRenderer>().materials[0].color = eyes;
 	}
 
 }

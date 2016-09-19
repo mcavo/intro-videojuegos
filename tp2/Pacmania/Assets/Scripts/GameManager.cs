@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance = null;				// Static instance of GameManager which allows it to be accessed by any other script.
@@ -66,5 +68,12 @@ public class GameManager : MonoBehaviour {
 			, {1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,1}
 			, {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}
 			, {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
+	}
+
+	public void RemoveLive() {
+		lives--;
+		if (lives >= 0) {
+			GameObject.Find ("Lives").GetComponentsInChildren<SpriteRenderer> ()[lives].gameObject.SetActive (false);
+		}
 	}
 }
