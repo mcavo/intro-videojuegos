@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance = null;				// Static instance of GameManager which allows it to be accessed by any other script.
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		score = 0;
+		lives = 3;
 	}
 	
 	// Update is called once per frame
@@ -39,8 +43,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void InitGame() {
-		score = 0;
-		lives = 3;
 		// TODO : Load raycasting
 		// TODO : Desbloquear el loop y hacerlo 
 		board = new int[22, 19]
@@ -66,5 +68,12 @@ public class GameManager : MonoBehaviour {
 			, {1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,1}
 			, {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}
 			, {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
+	}
+
+	public void RemoveLive() {
+		lives--;
+		if (lives >= 0) {
+			GameObject.Find ("Lives").GetComponentsInChildren<SpriteRenderer> ()[lives].gameObject.SetActive (false);
+		}
 	}
 }

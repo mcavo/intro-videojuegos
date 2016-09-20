@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 
 public class PacmanController : MonoBehaviour {
 
 	public float MovementSpeed = 0f;
+
+	private int pointsPerDot = 60;
+	//private int pointsPerCherry = 1000;
+	private int score;
 
 	private Animator animator;
 
@@ -54,6 +59,7 @@ public class PacmanController : MonoBehaviour {
 	void Start() {
 		QualitySettings.vSyncCount = 0;
 		animator = GetComponent<Animator> ();
+		score = GameManager.instance.score;
 		Reset();
 	}
 
@@ -94,6 +100,13 @@ public class PacmanController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col) {
+		if (col.CompareTag("Point")) {
+			score += pointsPerDot;
+			Text scoreText = GameObject.Find("Score").GetComponent<Text>();
+			Text scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
+			scoreText.text = score.ToString ();
+			scoreBorderText.text = score.ToString ();
+		}
 		if (col.CompareTag("Ghost")) {
 			animator.SetBool("IsDead", true);
 		}

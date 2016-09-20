@@ -13,7 +13,7 @@ public class PacmanDeathStateBehavior : StateMachineBehaviour {
 		}
 
 		if (stateInfo.shortNameHash == death) {
-			//animator.applyRootMotion (false);
+			//animator.ApplyRootMotion (true);
 		}
 	}
 
@@ -29,6 +29,7 @@ public class PacmanDeathStateBehavior : StateMachineBehaviour {
 		if (stateInfo.shortNameHash == death) {
 			//animator.applyRootMotion (true);
 		}
+		GameManager.instance.RemoveLive ();
 	}
 
 	// OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here
