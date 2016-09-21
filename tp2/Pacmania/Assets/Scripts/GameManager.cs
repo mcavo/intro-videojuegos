@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour {
 			, {n,u,n,n,u,n,n,n,u,n,u,n,n,n,u,n,n,u,n}
 			, {n,u,l,n,u,r,r,r,u,r,u,l,l,l,u,n,r,u,n}
 			, {n,n,u,n,u,n,u,n,n,n,n,n,u,n,u,n,u,n,n}
-			, {n,r,r,r,r,n,u,l,l,n,r,r,u,n,l,l,l,l,n}
+			, {n,r,r,r,u,n,u,l,l,n,r,r,u,n,u,l,l,l,n}
 			, {n,u,n,n,n,n,n,n,u,n,u,n,n,n,n,n,n,u,n}
 			, {n,u,r,r,r,r,r,r,u,r,u,l,l,l,l,l,l,u,n}
 			, {n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n}};
