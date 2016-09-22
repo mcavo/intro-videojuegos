@@ -7,10 +7,14 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager instance = null;				// Static instance of GameManager which allows it to be accessed by any other script.
 	public GhostController[] ghosts;
+	public GameObject CherryImage;
+	public GameObject LiveImage;
+
 	[HideInInspector] public int score;
 	[HideInInspector] public int[,] board;
 	[HideInInspector] public Vector3[,] directions;
 	private int lives;
+	private int cherries;
 	public Point Cherry;
 
 	private Text fruitTargetText;
@@ -49,17 +53,20 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		score = 0;
 		lives = 3;
+		cherries = 0;
 		InitializeGhosts ();
 		fruitTargetText = GameObject.Find("FruitTarget").GetComponent<Text>();
 		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (score >= pointsToSpawnCherry) {
-			Cherry.gameObject.SetActive (true);
-			StartCoroutine (ShowFruitTargetText ());
-			pointsToSpawnCherry *= 2;
+			if (GameObject.Find ("Cherry") == null) {
+				Cherry.gameObject.SetActive (true);
+				StartCoroutine (ShowFruitTargetText ());
+				pointsToSpawnCherry *= 2;
+			}
 		}
 	}
 
@@ -143,9 +150,31 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void RemoveLive() {
-		lives--;
-		if (lives >= 0) {
+		if (lives > 0) {
+			lives--;
 			GameObject.Find ("Lives").GetComponentsInChildren<SpriteRenderer> ()[lives].gameObject.SetActive (false);
 		}
+	}
+
+	public void AddLive() {
+		GameObject LivesGO = GameObject.Find ("Lives");
+		SpriteRenderer[] LivesSR = LivesGO.GetComponentsInChildren<SpriteRenderer> ();
+		if (LivesSR.Length >= lives + 1) {
+			LivesSR [lives].gameObject.SetActive (true);
+		} else {
+			GameObject liveInstance = Instantiate (CherryImage, LivesGO.GetComponent<Transform> ()) as GameObject;
+			liveInstance.transform.localPosition = new Vector3 (0, 0, 0);
+			liveInstance.transform.localScale = new Vector3 (15, 15, 15);
+		}
+		lives++;
+	}
+
+	public void AddCherry() {
+		Transform CherryT = GameObject.Find ("Cherries").GetComponent<Transform>();
+		GameObject cherryInstance = Instantiate (CherryImage, CherryT) as GameObject;
+		cherryInstance.transform.localPosition = new Vector3 (cherries*50,0,0);
+		cherryInstance.transform.localRotation = new Quaternion(0.0f,0.0f,0.0f,0.0f);
+		cherryInstance.transform.localScale = new Vector3 (18, 18, 18);
+		cherries++;
 	}
 }

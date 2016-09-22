@@ -110,6 +110,7 @@ public class PacmanController : MonoBehaviour {
 			IncrementScore (pointsPerPowerPellet);
 		} else if(col.CompareTag("Cherry")) {
 			IncrementScore (pointsPerCherry);
+			GameManager.instance.AddCherry ();
 		} else if(col.CompareTag("EatableGhost")) {
 			IncrementScore (pointsPerGhost);
 		}
