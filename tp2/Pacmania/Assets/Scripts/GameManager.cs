@@ -11,6 +11,12 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector] public int[,] board;
 	[HideInInspector] public Vector3[,] directions;
 	private int lives;
+	public Point Cherry;
+
+	private Text fruitTargetText;
+	private Text fruitTargetBorderText;
+
+	private int pointsToSpawnCherry = 1000;
 
 	private Vector3 u = Vector3.zero,
 					d = new Vector3(0,180,0),
@@ -44,11 +50,33 @@ public class GameManager : MonoBehaviour {
 		score = 0;
 		lives = 3;
 		InitializeGhosts ();
+		fruitTargetText = GameObject.Find("FruitTarget").GetComponent<Text>();
+		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (score >= pointsToSpawnCherry) {
+			Cherry.gameObject.SetActive (true);
+			StartCoroutine (ShowFruitTargetText ());
+			pointsToSpawnCherry *= 2;
+		}
+	}
+
+	public IEnumerator ShowFruitTargetText() {
+		Color ftc = fruitTargetText.color;
+		ftc.a = 0.6f;
+		fruitTargetText.color = ftc;
+		ftc = fruitTargetBorderText.color;
+		ftc.a = 0.6f;
+		fruitTargetBorderText.color = ftc;
+		yield return new WaitForSeconds (1.0f);
+		ftc = fruitTargetText.color;
+		ftc.a = 0.0f;
+		fruitTargetText.color = ftc;
+		ftc = fruitTargetBorderText.color;
+		ftc.a = 0.0f;
+		fruitTargetBorderText.color = ftc;
 	}
 
 	public void InitializeGhosts()
@@ -72,13 +100,13 @@ public class GameManager : MonoBehaviour {
 			, {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}
 			, {1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1}
 			, {1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1}
-			, {1,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1}
-			, {1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1}
-			, {1,1,1,1,0,1,0,2,2,2,2,2,0,1,0,1,1,1,1}
-			, {0,0,0,1,0,0,0,2,2,2,2,2,0,0,0,1,0,0,0}
-			, {1,1,1,1,0,1,0,2,2,2,2,2,0,1,0,1,1,1,1}
-			, {1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1}
-			, {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1}
+			, {1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1}
+			, {1,0,0,1,0,1,0,0,0,0,0,0,0,1,0,1,0,0,1}
+			, {1,1,0,1,0,1,0,2,2,2,2,2,0,1,0,1,0,1,1}
+			, {1,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,1}
+			, {1,0,1,1,0,1,0,2,2,2,2,2,0,1,0,1,1,0,1}
+			, {1,0,0,1,0,1,0,0,0,0,0,0,0,1,0,1,0,0,1}
+			, {1,1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1}
 			, {1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1}
 			, {1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1}
 			, {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1}
@@ -96,13 +124,13 @@ public class GameManager : MonoBehaviour {
 			, {n,r,r,r,d,r,d,l,l,l,r,r,d,l,d,l,l,l,n}
 			, {n,d,n,n,d,n,d,n,n,n,n,n,d,n,d,n,n,d,n}
 			, {n,r,r,r,d,n,r,r,d,n,d,l,l,n,d,l,l,l,n}
-			, {n,n,n,n,d,n,n,n,d,n,d,n,n,n,d,n,n,n,n}
-			, {n,n,n,n,d,n,r,r,r,d,l,l,l,n,d,n,n,n,n}
-			, {n,n,n,n,d,n,u,r,r,u,l,l,u,n,d,n,n,n,n}
-			, {n,n,n,n,r,r,u,r,r,u,l,l,u,l,l,n,n,n,n}
-			, {n,n,n,n,u,n,u,r,r,u,l,l,u,n,u,n,n,n,n}
-			, {n,n,n,n,u,n,u,l,l,r,r,r,u,n,u,n,n,n,n}
-			, {n,n,n,n,u,n,u,n,n,n,n,n,u,n,u,n,n,n,n}
+			, {n,d,n,n,d,n,n,n,d,n,d,n,n,n,d,n,n,d,n}
+			, {n,r,d,n,d,n,r,r,r,d,l,l,l,n,d,n,d,l,n}
+			, {n,n,d,n,d,n,u,r,r,u,l,l,u,n,d,n,d,n,n}
+			, {n,r,r,r,r,r,u,r,r,u,l,l,u,l,l,l,l,l,n}
+			, {n,u,n,n,u,n,u,r,r,u,l,l,u,n,u,n,n,u,n}
+			, {n,u,d,n,u,n,u,l,l,r,r,r,u,n,u,n,d,u,n}
+			, {n,n,d,n,u,n,u,n,n,n,n,n,u,n,u,n,d,n,n}
 			, {n,r,r,r,r,r,u,l,l,n,r,r,u,l,u,l,l,l,n}
 			, {n,u,n,n,u,n,n,n,u,n,u,n,n,n,u,n,n,u,n}
 			, {n,u,l,n,u,r,r,r,u,r,u,l,l,l,u,n,r,u,n}

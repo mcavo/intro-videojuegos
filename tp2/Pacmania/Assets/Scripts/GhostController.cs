@@ -245,6 +245,7 @@ public class GhostController : ObserverPattern.Observer {
 
 	void OnTriggerEnter(Collider col) {
 		if (col.CompareTag("Pacman") && isEatable) {
+			transform.gameObject.tag = "EatenGhost";
 			EatenProperties ();
 			if (co != null) {
 				StopCoroutine (co);

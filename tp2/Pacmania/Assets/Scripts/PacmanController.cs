@@ -10,6 +10,7 @@ public class PacmanController : MonoBehaviour {
 	private int pointsPerPacDot = 60;
 	private int pointsPerPowerPellet = 300;
 	private int pointsPerCherry = 1000;
+	private int pointsPerGhost = 1000;
 	private int score;
 
 	private Animator animator;
@@ -109,11 +110,14 @@ public class PacmanController : MonoBehaviour {
 			IncrementScore (pointsPerPowerPellet);
 		} else if(col.CompareTag("Cherry")) {
 			IncrementScore (pointsPerCherry);
+		} else if(col.CompareTag("EatableGhost")) {
+			IncrementScore (pointsPerGhost);
 		}
 	}
 
 	void IncrementScore(int points) {
 		score += points;
+		GameManager.instance.score = score;
 		Text scoreText = GameObject.Find("Score").GetComponent<Text>();
 		Text scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
 		scoreText.text = score.ToString ();
