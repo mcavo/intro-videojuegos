@@ -38,7 +38,7 @@ public class GhostController : ObserverPattern.Observer {
 		left = new Vector3(0,270,0),
 		currentDirection = Vector3.zero;
 
-	private Vector3 initialPosition = new Vector3(-7,-6.2f,5);
+	public Vector3 initialPosition = new Vector3(-7,-6.2f,5);
 
 	private void SetScapeBoard(int xMatrixPosition, int yMatrixPosition) {
 		// en x me muevo de 7 a 11

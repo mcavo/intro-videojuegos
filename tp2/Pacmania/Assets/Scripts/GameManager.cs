@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance = null;				// Static instance of GameManager which allows it to be accessed by any other script.
+	public GhostController[] ghosts;
 	[HideInInspector] public int score;
 	[HideInInspector] public int[,] board;
 	[HideInInspector] public Vector3[,] directions;
@@ -42,11 +43,22 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		score = 0;
 		lives = 3;
+		InitializeGhosts ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void InitializeGhosts()
+	{
+		Transform ghostsContainer = GameObject.Find ("Ghosts").GetComponent<Transform> ();
+		for (int i = 0; i < ghosts.Length; i++) {
+//			yield return new WaitForSeconds (1.0f);
+			Instantiate (ghosts [i], ghostsContainer);
+		}
+
 	}
 
 	void InitGame() {
