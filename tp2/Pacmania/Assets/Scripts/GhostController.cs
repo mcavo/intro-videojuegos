@@ -23,6 +23,12 @@ public class GhostController : ObserverPattern.Observer {
 
 	private bool isAlive = true;
 	private bool isEatable = false;
+	private bool justAwake = true;
+
+	public int xMatrixPosition = 7; // 7 / 19
+	public int yMatrixPosition = 9; // 9 22
+
+	private Vector3[,] directionsBoard = null;
 
 	private Coroutine co = null;
 
@@ -32,19 +38,38 @@ public class GhostController : ObserverPattern.Observer {
 		left = new Vector3(0,270,0),
 		currentDirection = Vector3.zero;
 
-	private Vector3 initialPosition = new Vector3(1,-6.2f,9);
+	private Vector3 initialPosition = new Vector3(-7,-6.2f,5);
+
+	private void SetScapeBoard(int xMatrixPosition, int yMatrixPosition) {
+		// en x me muevo de 7 a 11
+		// en y me muevo de 9 a 11
+		for (int i = 7; i < 12; i++) {
+			for (int j = 9; j < 12; j++) {
+				if (xMatrixPosition < 9) {
+					directionsBoard [j, i] = left;
+				} else {
+					directionsBoard [j, i] = right;
+				}
+			}
+		}
+		for (int i = 9; i < yMatrixPosition; i++) {
+			directionsBoard [i, 9] = down;
+		}
+	}
 
 	private System.Random rnd = new System.Random(new System.DateTime().Millisecond);
 
 	void Start() {
 		QualitySettings.vSyncCount = 0;
 		transform.position = initialPosition;
+		directionsBoard = (Vector3[,])GameManager.instance.directions.Clone ();
+		SetScapeBoard(xMatrixPosition, yMatrixPosition);
 		Reset();
 		ObserverPattern.Subject.getInstance ().AddObserver (this); //Subscribe to notification
 		//Get a component reference to this object's BoxCollider2D
-		boxCollider = GetComponent <BoxCollider> ();
+//		boxCollider = GetComponent <BoxCollider> ();
 		//Get a component reference to this object's Rigidbody2D
-		rb = GetComponent <Rigidbody> ();
+//		rb = GetComponent <Rigidbody> ();
 	}
 
 	public void Reset() {
@@ -67,17 +92,31 @@ public class GhostController : ObserverPattern.Observer {
 		var isMoving = true;
 
 		if (AtCheckPoint ()) {
-			if (isAlive) {
-				MovementSpeed = 10f;
-				if (isEatable) {
-					MovementSpeed = 16f;
+			int[] position = GetBoardPosition (RoundVector3 (transform.position, 2));
+			if (isAlive || position [0] != xMatrixPosition || position [1] != yMatrixPosition) {
+				if (GameManager.instance.board [position [1], position [0]] != 2) {
+					justAwake = false;
 				}
-				UpdateDirection ();
+
+				if (isAlive && !justAwake) {
+					MovementSpeed = 10f;
+					if (isEatable) {
+						MovementSpeed = 16f;
+					}
+					UpdateDirection ();
+				} else {
+					if (justAwake) {
+						MovementSpeed = 10f;
+					} else {
+						MovementSpeed = 16f;
+					}
+					isMoving = UpdateDirectedDirection ();
+				}
+				transform.localEulerAngles = currentDirection;
 			} else {
-				MovementSpeed = 16f;
-				isMoving = UpdateEatenDirection ();
+				transform.localEulerAngles = down;
+				isMoving = false;
 			}
-			transform.localEulerAngles = currentDirection;
 		}
 
 		if (isMoving) {
@@ -116,7 +155,7 @@ public class GhostController : ObserverPattern.Observer {
 			if (Physics.Raycast (curPosition, nextPosition, out hit)) {
 				if (hit.collider.tag == "Pacman") {
 					if (isEatable) {
-						ifCanMoveAddToArrayList (BackDirection(currentDirection), posibleDirections);
+						ifCanMoveAddToArrayList (OppositeDirection(currentDirection), posibleDirections);
 						posibleDirections.Remove (angle);
 						break;
 					} else {
@@ -131,13 +170,13 @@ public class GhostController : ObserverPattern.Observer {
 
 	}
 
-	private bool UpdateEatenDirection() {
+	private bool UpdateDirectedDirection() {
 		currentDirection = GetNewDirection (RoundVector3 (transform.position, 2));
 		transform.localEulerAngles = currentDirection;
 		return CanMove (GetBoardPosition (RoundVector3 (transform.position + transform.forward * movementOffset, 2)));
 	}
 
-	private Vector3 BackDirection( Vector3 angle) {
+	private Vector3 OppositeDirection( Vector3 angle) {
 		if (angle == up) {
 			return down;
 		} else if (angle == down) {
@@ -153,7 +192,7 @@ public class GhostController : ObserverPattern.Observer {
 	}
 
 	private void ifCanMoveAndNotOppositeAddToArrayList(Vector3 angle, ArrayList posibleDirections) {
-		if (currentDirection != BackDirection (angle)) {
+		if (currentDirection != OppositeDirection (angle)) {
 			ifCanMoveAddToArrayList (angle, posibleDirections);
 		}
 	}
@@ -167,11 +206,18 @@ public class GhostController : ObserverPattern.Observer {
 	}
 
 	private bool CanMove( int[] toPosition ) {
-		return GameManager.instance.board [toPosition[1], toPosition[0]] == 0;
+		int canMove = GameManager.instance.board [toPosition [1], toPosition [0]];
+		if ( canMove == 0) {
+			return true;
+		}
+		return canMove == 0 || (canMove == 2 && justAwake) || (canMove == 2 && !isAlive) ;
 	}
 
-	private Vector3 GetBoardDirection( int[] toPosition ) {
-		return GameManager.instance.directions [toPosition[1], toPosition[0]];
+	private Vector3 GetBoardDirection( int[] position ) {
+		if (GameManager.instance.board [position [1], position [0]] == 2 && !isAlive) {
+			return directionsBoard [position[1], position[0]];
+		}
+		return GameManager.instance.directions [position[1], position[0]];
 	}
 
 	private int[] GetBoardPosition( Vector3 position ) {
@@ -212,7 +258,7 @@ public class GhostController : ObserverPattern.Observer {
 	{
 		while(!isAlive) {
 			yield return new WaitForSeconds (7.0f);
-			for (int i = 1; i <= 15; i++) {
+			for (int i = 1; i <= 10; i++) {
 				SetGhostColor (BodyColor, EyesColor, TransparentAlpha);
 				yield return new WaitForSeconds (0.2f);
 				SetGhostColor (BodyColor, EyesColor, NotSoTransparentAlpha);
@@ -220,6 +266,7 @@ public class GhostController : ObserverPattern.Observer {
 			}
 			SetGhostColor (BodyColor, EyesColor, SolidAlpha);
 			transform.gameObject.tag = "Ghost";
+			justAwake = true;
 			isAlive = true;
 			isEatable = false;
 		}
@@ -230,7 +277,7 @@ public class GhostController : ObserverPattern.Observer {
 	{
 		while(isAlive && isEatable) {
 			yield return new WaitForSeconds (7.0f);
-			for (int i = 1; i <= 15; i++) {
+			for (int i = 1; i <= 10; i++) {
 				SetGhostColor (BodyColorEatable, EyesColorEatable, SolidAlpha);
 				yield return new WaitForSeconds (0.2f);
 				SetGhostColor (BodyColor, EyesColor, SolidAlpha);
