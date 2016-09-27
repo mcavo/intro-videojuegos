@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector] public Vector3[,] directions;
 	private int lives;
 	private int cherries;
+	private bool pause;
 	public Point Cherry;
 
 	private Text fruitTargetText;
@@ -61,6 +62,16 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKey (KeyCode.P)) {
+			pause = !pause;
+		}
+
+		if (pause) {
+			Time.timeScale = 0;
+		} else {
+			Time.timeScale = 1;
+		}
+
 		if (score >= pointsToSpawnCherry) {
 			if (GameObject.Find ("Cherry") == null) {
 				Cherry.gameObject.SetActive (true);
@@ -99,6 +110,9 @@ public class GameManager : MonoBehaviour {
 	void InitGame() {
 		// TODO : Load raycasting
 		// TODO : Desbloquear el loop y hacerlo 
+
+		pause = false;
+
 		board = new int[22, 19]
 			{ {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 			, {1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1}
