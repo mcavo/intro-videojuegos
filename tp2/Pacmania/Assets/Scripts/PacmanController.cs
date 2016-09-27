@@ -7,14 +7,21 @@ public class PacmanController : MonoBehaviour {
 
 	public float MovementSpeed = 0f;
 
-	private int pointsPerDot = 60;
-	//private int pointsPerCherry = 1000;
+	private int pointsPerPacDot = 60;
+	private int pointsPerPowerPellet = 300;
+	private int pointsPerCherry = 1000;
+	private int pointsPerGhost = 1000;
 	private int score;
 
 	private Animator animator;
 
 	private int movementOffset = 4;
 	private int[] matrixOffset = new int[2] {-37,41};
+
+	private bool isJumpingUp = false;
+	private bool isJumpingDown = false;
+	private int jumpCount = 0;
+	private Vector3 jumpintVector;
 
 	private Vector3 up = Vector3.zero,
 					down = new Vector3(0,180,0),
@@ -79,6 +86,10 @@ public class PacmanController : MonoBehaviour {
 			nextDirection = left;
 		}
 
+		if (Input.GetKeyDown (KeyCode.Space) && !isJumpingUp && !isJumpingDown) {
+			isJumpingUp = true;
+		}
+
 		if (AtCheckPoint ()) {
 			UpdateDirection ();
 			transform.localEulerAngles = currentDirection;
@@ -86,13 +97,38 @@ public class PacmanController : MonoBehaviour {
 				isMoving = false;
 			}
 		}
+			
+		if (isJumpingUp) {
+			jumpCount++;
+			jumpintVector = Vector3.up * 3 / (jumpCount + 1);
+			Debug.Log (jumpintVector);
+			if (jumpCount == MovementSpeed) {
+				jumpCount = 0;
+				isJumpingUp = false;
+				isJumpingDown = true;
+			}	
+		} else if (isJumpingDown) {
+			jumpCount++;
+			jumpintVector = Vector3.down * 3 / (MovementSpeed + 2 - jumpCount);
+			Debug.Log (jumpintVector);
+			if (jumpCount == MovementSpeed) {
+				jumpCount = 0;
+				isJumpingDown = false;
+			}
+		} else {
+			jumpintVector = Vector3.zero;	
+		}
+			
 
 		//transform.localEulerAngles = currentDirection;
-		animator.SetBool ("IsMoving", isMoving);
+		animator.SetBool ("IsMoving", (isMoving || isJumpingDown || isJumpingUp));
 
+		Vector3 movingVector = jumpintVector;
 		if (isMoving) {
-			transform.Translate(RoundVector3(Vector3.forward *(movementOffset/ MovementSpeed), 2));
-		}
+			Debug.Log (movementOffset / MovementSpeed + " - " + Time.deltaTime);
+			movingVector += RoundVector3 (Vector3.forward * (movementOffset / MovementSpeed), 2);
+		} 
+		transform.Translate (movingVector);
 	}
 
 	private Vector3 RoundVector3 ( Vector3 v, int decimals) {
@@ -100,15 +136,26 @@ public class PacmanController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col) {
-		if (col.CompareTag("Point")) {
-			score += pointsPerDot;
-			Text scoreText = GameObject.Find("Score").GetComponent<Text>();
-			Text scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
-			scoreText.text = score.ToString ();
-			scoreBorderText.text = score.ToString ();
-		}
 		if (col.CompareTag("Ghost")) {
 			animator.SetBool("IsDead", true);
+		} else if (col.CompareTag("PacDot")) {
+			IncrementScore (pointsPerPacDot);
+		} else if (col.CompareTag("PowerPellet")) {
+			IncrementScore (pointsPerPowerPellet);
+		} else if(col.CompareTag("Cherry")) {
+			IncrementScore (pointsPerCherry);
+			GameManager.instance.AddCherry ();
+		} else if(col.CompareTag("EatableGhost")) {
+			IncrementScore (pointsPerGhost);
 		}
+	}
+
+	void IncrementScore(int points) {
+		score += points;
+		GameManager.instance.score = score;
+		Text scoreText = GameObject.Find("Score").GetComponent<Text>();
+		Text scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
+		scoreText.text = score.ToString ();
+		scoreBorderText.text = score.ToString ();
 	}
 }

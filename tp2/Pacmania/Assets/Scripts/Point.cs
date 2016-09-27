@@ -7,7 +7,7 @@ public class Point : MonoBehaviour
 	{
 		if (col.tag.Equals ("Pacman"))
 		{
-			Destroy(gameObject); 
+			transform.gameObject.SetActive (false);
 		}
 	}
 }
