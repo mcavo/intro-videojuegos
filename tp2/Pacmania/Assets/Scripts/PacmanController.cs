@@ -93,6 +93,7 @@ public class PacmanController : MonoBehaviour {
 		animator.SetBool ("IsMoving", isMoving);
 
 		if (isMoving) {
+			Debug.Log (movementOffset / MovementSpeed + " - " + Time.deltaTime);
 			transform.Translate(RoundVector3(Vector3.forward *(movementOffset/ MovementSpeed), 2));
 		}
 	}

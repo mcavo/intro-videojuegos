@@ -65,8 +65,8 @@ public class GameManager : MonoBehaviour {
 			if (GameObject.Find ("Cherry") == null) {
 				Cherry.gameObject.SetActive (true);
 				StartCoroutine (ShowFruitTargetText ());
-				pointsToSpawnCherry *= 2;
 			}
+			pointsToSpawnCherry *= 2;
 		}
 	}
 
