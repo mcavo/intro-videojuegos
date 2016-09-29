@@ -12,6 +12,7 @@ public class PacmanController : MonoBehaviour {
 	private int pointsPerCherry = 1000;
 	private int pointsPerGhost = 1000;
 	private int score;
+	private float deltaMovement;
 
 	private Animator animator;
 
@@ -29,26 +30,75 @@ public class PacmanController : MonoBehaviour {
 					left = new Vector3(0,270,0),
 					nextDirection = Vector3.zero,
 					currentDirection = Vector3.zero;
-	private Vector3 initialPosition = new Vector3(1,-7.5f,-7);
+	private Vector3 InitialPosition = new Vector3(1,-7.5f,-7);
+	private Vector3 CheckPointPosition = new Vector3(1,-7.5f,-7);
 
 	public void Reset() {
-		transform.position = initialPosition;
+		transform.position = InitialPosition;
 		animator.SetBool ("IsDead", false);
 		animator.SetBool ("IsMoving", false);
-		currentDirection = down;
-		nextDirection = down;
+		currentDirection = right;
+		nextDirection = right;
 	}
 
-	private bool AtCheckPoint() {
-		Vector3 pos = transform.position;
-		return Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.x / 4f, 2) - Mathf.Floor (pos.x / 4f))) &&
-		Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.z / 4f, 2) - Mathf.Floor (pos.z / 4f)));
+	private void CheckInput() {
+		if (Input.GetKey(KeyCode.UpArrow)) {
+			nextDirection = up;
+		} else if (Input.GetKey(KeyCode.DownArrow)) {
+			nextDirection = down;
+		} else if (Input.GetKey(KeyCode.RightArrow)) {
+			nextDirection = right;
+		} else if (Input.GetKey(KeyCode.LeftArrow)) {
+			nextDirection = left;
+		} else if (Input.GetKeyDown (KeyCode.Space) && !isJumpingUp && !isJumpingDown) {
+			isJumpingUp = true;
+		}
+	}
+
+	private bool CrossedCheckPoint(Vector3 nextPosition) {
+		Vector3 posibleCheckPoint;
+		float num;
+
+		Debug.Log ("-------------------");
+		Debug.Log ("actual: " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
+		Debug.Log ("next: " + nextPosition.x + " " + nextPosition.y + " " + nextPosition.z);
+		if (currentDirection == up && Mathf.CeilToInt (transform.position.z) == Mathf.FloorToInt (nextPosition.z)) {
+			posibleCheckPoint = new Vector3 (transform.position.x, transform.position.y, Mathf.FloorToInt (nextPosition.z));
+			num = Mathf.Floor (nextPosition.z);
+			deltaMovement = nextPosition.z - num;
+		} else if (currentDirection == down && Mathf.FloorToInt (transform.position.z) == Mathf.CeilToInt (nextPosition.z)) {
+			posibleCheckPoint = new Vector3 (transform.position.x, transform.position.y, Mathf.CeilToInt (nextPosition.z));
+			num = Mathf.Ceil (nextPosition.z);
+			deltaMovement = num - nextPosition.z;
+		} else if (currentDirection == right && Mathf.CeilToInt (transform.position.x) == Mathf.FloorToInt (nextPosition.x)) {
+			posibleCheckPoint = new Vector3 (Mathf.FloorToInt (nextPosition.x), transform.position.y, transform.position.z);
+			num = Mathf.Floor (nextPosition.x);
+			deltaMovement = nextPosition.x - num;
+		} else if (currentDirection == left && Mathf.FloorToInt (transform.position.x) == Mathf.CeilToInt (nextPosition.x)) {
+			posibleCheckPoint = new Vector3 (Mathf.CeilToInt (nextPosition.x), transform.position.y, transform.position.z);
+			num = Mathf.Ceil (nextPosition.x);
+			deltaMovement = num - nextPosition.x;
+		} else {
+			return false;
+		}
+
+		if ( Mathf.Approximately(0.25f, (float)(System.Math.Round (num / 4f, 2) - Mathf.Floor (num / 4f))) ) {
+			CheckPointPosition = posibleCheckPoint;
+			nextPosition = CheckPointPosition + transform.forward * deltaMovement;
+			return true;
+		}
+		return false;
+
+//	
+//		Vector3 pos = transform.position;
+//		return Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.x / 4f, 2) - Mathf.Floor (pos.x / 4f))) &&
+//		Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.z / 4f, 2) - Mathf.Floor (pos.z / 4f)));
 	}
 
 	private void UpdateDirection() {
 		if (currentDirection != nextDirection) {
 			transform.localEulerAngles = nextDirection;
-			if (CanMove (GetBoardPosition(RoundVector3(transform.position + transform.forward * movementOffset, 2)))) {
+			if (CanMove (GetBoardPosition(RoundVector3(CheckPointPosition + transform.forward * movementOffset, 0)))) {
 				currentDirection = nextDirection;
 			}
 			transform.localEulerAngles = currentDirection;
@@ -73,62 +123,67 @@ public class PacmanController : MonoBehaviour {
 	void Update() {
 		var isMoving = true;
 		var isDead = animator.GetBool ("IsDead");
+		transform.localEulerAngles = currentDirection;
+		Vector3 nextPosition = transform.position + Vector3.forward * MovementSpeed * Time.deltaTime;
+
+		Debug.Log (nextPosition.x + " " + nextPosition.y + " " + nextPosition.z);
 
 		if (isDead) {
 			isMoving = false;
-		} else if (Input.GetKey(KeyCode.UpArrow)) {
-			nextDirection = up;
-		} else if (Input.GetKey(KeyCode.DownArrow)) {
-			nextDirection = down;
-		} else if (Input.GetKey(KeyCode.RightArrow)) {
-			nextDirection = right;
-		} else if (Input.GetKey(KeyCode.LeftArrow)) {
-			nextDirection = left;
-		}
-
-		if (Input.GetKeyDown (KeyCode.Space) && !isJumpingUp && !isJumpingDown) {
-			isJumpingUp = true;
-		}
-
-		if (AtCheckPoint ()) {
-			UpdateDirection ();
-			transform.localEulerAngles = currentDirection;
-			if ( !CanMove (GetBoardPosition(RoundVector3(transform.position + transform.forward * movementOffset,2)))) {
-				isMoving = false;
-			}
-		}
-			
-		if (isJumpingUp) {
-			jumpCount++;
-			jumpintVector = Vector3.up * 3 / (jumpCount + 1);
-			Debug.Log (jumpintVector);
-			if (jumpCount == MovementSpeed) {
-				jumpCount = 0;
-				isJumpingUp = false;
-				isJumpingDown = true;
-			}	
-		} else if (isJumpingDown) {
-			jumpCount++;
-			jumpintVector = Vector3.down * 3 / (MovementSpeed + 2 - jumpCount);
-			Debug.Log (jumpintVector);
-			if (jumpCount == MovementSpeed) {
-				jumpCount = 0;
-				isJumpingDown = false;
-			}
 		} else {
-			jumpintVector = Vector3.zero;	
+			CheckInput ();
 		}
-			
+		if (CrossedCheckPoint (nextPosition)) {
+			UpdateDirection ();
+			if ( !CanMove (GetBoardPosition(CheckPointPosition + transform.forward * movementOffset))) {
+				isMoving = false;
+				nextPosition = CheckPointPosition;
+			}
+		}
 
-		//transform.localEulerAngles = currentDirection;
-		animator.SetBool ("IsMoving", (isMoving || isJumpingDown || isJumpingUp));
+		animator.SetBool ("IsMoving", isMoving);
 
-		Vector3 movingVector = jumpintVector;
-		if (isMoving) {
-			Debug.Log (movementOffset / MovementSpeed + " - " + Time.deltaTime);
-			movingVector += RoundVector3 (Vector3.forward * (movementOffset / MovementSpeed), 2);
-		} 
-		transform.Translate (movingVector);
+		transform.position = nextPosition;
+
+//		if (CrossedCheckPoint ()) {
+//			UpdateDirection ();
+//			transform.localEulerAngles = currentDirection;
+//			if ( !CanMove (GetBoardPosition(RoundVector3(transform.position + transform.forward * movementOffset,2)))) {
+//				isMoving = false;
+//			}
+//		}
+//			
+//		if (isJumpingUp) {
+//			jumpCount++;
+//			jumpintVector = Vector3.up * 3 / (jumpCount + 1);
+//			Debug.Log (jumpintVector);
+//			if (jumpCount == MovementSpeed) {
+//				jumpCount = 0;
+//				isJumpingUp = false;
+//				isJumpingDown = true;
+//			}	
+//		} else if (isJumpingDown) {
+//			jumpCount++;
+//			jumpintVector = Vector3.down * 3 / (MovementSpeed + 2 - jumpCount);
+//			Debug.Log (jumpintVector);
+//			if (jumpCount == MovementSpeed) {
+//				jumpCount = 0;
+//				isJumpingDown = false;
+//			}
+//		} else {
+//			jumpintVector = Vector3.zero;	
+//		}
+//			
+//
+//		//transform.localEulerAngles = currentDirection;
+//		animator.SetBool ("IsMoving", (isMoving || isJumpingDown || isJumpingUp));
+//
+//		Vector3 movingVector = jumpintVector;
+//		if (isMoving) {
+//			Debug.Log (movementOffset / MovementSpeed + " - " + Time.deltaTime);
+//			movingVector += RoundVector3 (Vector3.forward * (movementOffset / MovementSpeed), 2);
+//		} 
+//		transform.Translate (movingVector);
 	}
 
 	private Vector3 RoundVector3 ( Vector3 v, int decimals) {
