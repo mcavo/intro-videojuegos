@@ -37,8 +37,8 @@ public class PacmanController : MonoBehaviour {
 		transform.position = InitialPosition;
 		animator.SetBool ("IsDead", false);
 		animator.SetBool ("IsMoving", false);
-		currentDirection = right;
-		nextDirection = right;
+		currentDirection = down;
+		nextDirection = down;
 	}
 
 	private void CheckInput() {
@@ -58,10 +58,6 @@ public class PacmanController : MonoBehaviour {
 	private bool CrossedCheckPoint(Vector3 nextPosition) {
 		Vector3 posibleCheckPoint;
 		float num;
-
-		Debug.Log ("-------------------");
-		Debug.Log ("actual: " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
-		Debug.Log ("next: " + nextPosition.x + " " + nextPosition.y + " " + nextPosition.z);
 		if (currentDirection == up && Mathf.CeilToInt (transform.position.z) == Mathf.FloorToInt (nextPosition.z)) {
 			posibleCheckPoint = new Vector3 (transform.position.x, transform.position.y, Mathf.FloorToInt (nextPosition.z));
 			num = Mathf.Floor (nextPosition.z);
@@ -83,16 +79,10 @@ public class PacmanController : MonoBehaviour {
 		}
 
 		if ( Mathf.Approximately(0.25f, (float)(System.Math.Round (num / 4f, 2) - Mathf.Floor (num / 4f))) ) {
-			CheckPointPosition = posibleCheckPoint;
-			nextPosition = CheckPointPosition + transform.forward * deltaMovement;
+			CheckPointPosition = RoundVector3 (posibleCheckPoint, 1);
 			return true;
 		}
 		return false;
-
-//	
-//		Vector3 pos = transform.position;
-//		return Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.x / 4f, 2) - Mathf.Floor (pos.x / 4f))) &&
-//		Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.z / 4f, 2) - Mathf.Floor (pos.z / 4f)));
 	}
 
 	private void UpdateDirection() {
@@ -124,27 +114,32 @@ public class PacmanController : MonoBehaviour {
 		var isMoving = true;
 		var isDead = animator.GetBool ("IsDead");
 		transform.localEulerAngles = currentDirection;
-		Vector3 nextPosition = transform.position + Vector3.forward * MovementSpeed * Time.deltaTime;
-
-		Debug.Log (nextPosition.x + " " + nextPosition.y + " " + nextPosition.z);
+		Vector3 nextPosition = transform.position + transform.forward * MovementSpeed * Time.deltaTime;
 
 		if (isDead) {
 			isMoving = false;
 		} else {
 			CheckInput ();
-		}
-		if (CrossedCheckPoint (nextPosition)) {
-			UpdateDirection ();
-			if ( !CanMove (GetBoardPosition(CheckPointPosition + transform.forward * movementOffset))) {
-				isMoving = false;
-				nextPosition = CheckPointPosition;
+
+			if (CrossedCheckPoint (nextPosition)) {
+				UpdateDirection ();
+				if (!CanMove (GetBoardPosition (CheckPointPosition + transform.forward * movementOffset))) {
+					isMoving = false;
+					nextPosition = CheckPointPosition;
+				} else {
+					nextPosition = CheckPointPosition + transform.forward * deltaMovement;
+				}
 			}
+		}
+		if (!CanMove (GetBoardPosition (CheckPointPosition + transform.forward * movementOffset))) {
+			isMoving = false;
 		}
 
 		animator.SetBool ("IsMoving", isMoving);
 
-		transform.position = nextPosition;
-
+		if (isMoving) {
+			transform.position = nextPosition;
+		}
 //		if (CrossedCheckPoint ()) {
 //			UpdateDirection ();
 //			transform.localEulerAngles = currentDirection;
