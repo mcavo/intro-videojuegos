@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour {
 		InitializeGhosts ();
 		fruitTargetText = GameObject.Find("FruitTarget").GetComponent<Text>();
 		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
+		StartCoroutine(PauseCoroutine());   
 	}
 
 	// Update is called once per frame
@@ -95,6 +96,22 @@ public class GameManager : MonoBehaviour {
 		ftc = fruitTargetBorderText.color;
 		ftc.a = 0.0f;
 		fruitTargetBorderText.color = ftc;
+	}
+
+	IEnumerator PauseCoroutine() {
+		while (true)
+		{
+			if (Input.GetKeyDown(KeyCode.P))
+			{
+				if (Time.timeScale == 0)
+				{
+					Time.timeScale = 1;
+				} else {
+					Time.timeScale = 0;
+				}
+			}    
+			yield return null;    
+		}
 	}
 
 	public void InitializeGhosts()
