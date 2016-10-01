@@ -19,10 +19,11 @@ public class PacmanController : MonoBehaviour {
 	private int movementOffset = 4;
 	private int[] matrixOffset = new int[2] {-37,41};
 
-	private bool isJumpingUp = false;
-	private bool isJumpingDown = false;
-	private int jumpCount = 0;
-	private Vector3 jumpintVector;
+//	private bool isJumpingUp = false;
+//	private bool isJumpingDown = false;
+//	private int jumpCount = 0;
+	private bool isJumping;
+	private float jumpingDistance;
 
 	private Vector3 up = Vector3.zero,
 					down = new Vector3(0,180,0),
@@ -37,21 +38,23 @@ public class PacmanController : MonoBehaviour {
 		transform.position = InitialPosition;
 		animator.SetBool ("IsDead", false);
 		animator.SetBool ("IsMoving", false);
+		isJumping = false;
+		jumpingDistance = 0;
 		currentDirection = down;
 		nextDirection = down;
 	}
 
 	private void CheckInput() {
-		if (Input.GetKey(KeyCode.UpArrow)) {
+		if (Input.GetKey (KeyCode.UpArrow)) {
 			nextDirection = up;
-		} else if (Input.GetKey(KeyCode.DownArrow)) {
+		} else if (Input.GetKey (KeyCode.DownArrow)) {
 			nextDirection = down;
 		} else if (Input.GetKey(KeyCode.RightArrow)) {
 			nextDirection = right;
 		} else if (Input.GetKey(KeyCode.LeftArrow)) {
 			nextDirection = left;
-		} else if (Input.GetKeyDown (KeyCode.Space) && !isJumpingUp && !isJumpingDown) {
-			isJumpingUp = true;
+		} else if (Input.GetKey(KeyCode.Space) && !isJumping) {
+			isJumping = true;
 		}
 	}
 
@@ -103,6 +106,18 @@ public class PacmanController : MonoBehaviour {
 		return new int[2] { (int) ((position.x - matrixOffset [0]) / movementOffset), (int) ((matrixOffset [1] - position.z) / movementOffset) };
 	}
 
+	private float GetJump() {
+		float a = -0.25f, b=2.0f;
+		float jump = a * Mathf.Pow (jumpingDistance, 2) + b * jumpingDistance;
+		if (jump < 0) {
+			isJumping = false;
+			jumpingDistance = 0;
+			jump = 0;
+		}
+		return jump;
+
+	}
+
 	void Start() {
 		QualitySettings.vSyncCount = 0;
 		animator = GetComponent<Animator> ();
@@ -118,8 +133,14 @@ public class PacmanController : MonoBehaviour {
 
 		if (isDead) {
 			isMoving = false;
+
 		} else {
+
 			CheckInput ();
+
+			if (isJumping) {
+				jumpingDistance += MovementSpeed * Time.deltaTime;
+			}
 
 			if (CrossedCheckPoint (nextPosition)) {
 				UpdateDirection ();
@@ -130,16 +151,21 @@ public class PacmanController : MonoBehaviour {
 					nextPosition = CheckPointPosition + transform.forward * deltaMovement;
 				}
 			}
-		}
-		if (!CanMove (GetBoardPosition (CheckPointPosition + transform.forward * movementOffset))) {
-			isMoving = false;
-		}
 
-		animator.SetBool ("IsMoving", isMoving);
+			if (!CanMove (GetBoardPosition (CheckPointPosition + transform.forward * movementOffset))) {
+				isMoving = false;
+				nextPosition = CheckPointPosition;
+			}
 
-		if (isMoving) {
+			nextPosition.y = InitialPosition.y + GetJump ();
+
+			animator.SetBool ("IsMoving", isMoving);
+
 			transform.position = nextPosition;
+
 		}
+
+
 //		if (CrossedCheckPoint ()) {
 //			UpdateDirection ();
 //			transform.localEulerAngles = currentDirection;
