@@ -107,7 +107,7 @@ public class PacmanController : MonoBehaviour {
 	}
 
 	private float GetJump() {
-		float a = -0.25f, b=2.0f;
+		float a = -1f/6f, b=2.0f;
 		float jump = a * Mathf.Pow (jumpingDistance, 2) + b * jumpingDistance;
 		if (jump < 0) {
 			isJumping = false;
