@@ -15,10 +15,13 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector] public Vector3[,] directions;
 	private int lives;
 	private int cherries;
+	private bool pause;
 	public Point Cherry;
 
 	private Text fruitTargetText;
 	private Text fruitTargetBorderText;
+
+	private GameObject PauseFeedBack;
 
 	private int pointsToSpawnCherry = 1000;
 
@@ -57,10 +60,25 @@ public class GameManager : MonoBehaviour {
 		InitializeGhosts ();
 		fruitTargetText = GameObject.Find("FruitTarget").GetComponent<Text>();
 		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
+		PauseFeedBack = GameObject.Find ("Pause");
+		PauseFeedBack.SetActive (false);
+		StartCoroutine(PauseCoroutine());   
 	}
 
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKey (KeyCode.P)) {
+			pause = !pause;
+		}
+
+		if (pause) {
+			Time.timeScale = 0;
+			PauseFeedBack.SetActive (true);
+		} else {
+			Time.timeScale = 1;
+			PauseFeedBack.SetActive (false);
+		}
+
 		if (score >= pointsToSpawnCherry) {
 			if (GameObject.Find ("Cherry") == null) {
 				Cherry.gameObject.SetActive (true);
@@ -86,6 +104,22 @@ public class GameManager : MonoBehaviour {
 		fruitTargetBorderText.color = ftc;
 	}
 
+	IEnumerator PauseCoroutine() {
+		while (true)
+		{
+			if (Input.GetKeyDown(KeyCode.P))
+			{
+				if (Time.timeScale == 0)
+				{
+					Time.timeScale = 1;
+				} else {
+					Time.timeScale = 0;
+				}
+			}    
+			yield return null;    
+		}
+	}
+
 	public void InitializeGhosts()
 	{
 		Transform ghostsContainer = GameObject.Find ("Ghosts").GetComponent<Transform> ();
@@ -99,6 +133,9 @@ public class GameManager : MonoBehaviour {
 	void InitGame() {
 		// TODO : Load raycasting
 		// TODO : Desbloquear el loop y hacerlo 
+
+		pause = false;
+
 		board = new int[22, 19]
 			{ {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 			, {1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1}

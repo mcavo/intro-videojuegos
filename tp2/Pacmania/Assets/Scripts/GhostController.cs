@@ -14,6 +14,7 @@ public class GhostController : ObserverPattern.Observer {
 	private float NotSoTransparentAlpha = 0.7f;
 
 	private float MovementSpeed = 10f;
+	private float deltaMovement = 0;
 
 	private int movementOffset = 4;
 	private int[] matrixOffset = new int[2] {-37,41};
@@ -39,6 +40,7 @@ public class GhostController : ObserverPattern.Observer {
 		currentDirection = Vector3.zero;
 
 	public Vector3 initialPosition = new Vector3(-7,-6.2f,5);
+	private Vector3 CheckPointPosition;
 
 	private void SetScapeBoard(int xMatrixPosition, int yMatrixPosition) {
 		// en x me muevo de 7 a 11
@@ -62,14 +64,11 @@ public class GhostController : ObserverPattern.Observer {
 	void Start() {
 		QualitySettings.vSyncCount = 0;
 		transform.position = initialPosition;
+		CheckPointPosition = initialPosition;
 		directionsBoard = (Vector3[,])GameManager.instance.directions.Clone ();
 		SetScapeBoard(xMatrixPosition, yMatrixPosition);
 		Reset();
 		ObserverPattern.Subject.getInstance ().AddObserver (this); //Subscribe to notification
-		//Get a component reference to this object's BoxCollider2D
-//		boxCollider = GetComponent <BoxCollider> ();
-		//Get a component reference to this object's Rigidbody2D
-//		rb = GetComponent <Rigidbody> ();
 	}
 
 	public void Reset() {
@@ -90,9 +89,11 @@ public class GhostController : ObserverPattern.Observer {
 	void Update() {
 
 		var isMoving = true;
+		transform.localEulerAngles = currentDirection;
+		Vector3 nextPosition = transform.position + transform.forward * MovementSpeed * Time.deltaTime;
 
-		if (AtCheckPoint ()) {
-			int[] position = GetBoardPosition (RoundVector3 (transform.position, 2));
+		if (CrossedCheckPoint (nextPosition)) {
+			int[] position = GetBoardPosition (CheckPointPosition);
 			if (isAlive || position [0] != xMatrixPosition || position [1] != yMatrixPosition) {
 				if (GameManager.instance.board [position [1], position [0]] != 2) {
 					justAwake = false;
@@ -101,34 +102,60 @@ public class GhostController : ObserverPattern.Observer {
 				if (isAlive && !justAwake) {
 					MovementSpeed = 10f;
 					if (isEatable) {
-						MovementSpeed = 16f;
+						MovementSpeed = 8f;
 					}
 					UpdateDirection ();
 				} else {
 					if (justAwake) {
 						MovementSpeed = 10f;
 					} else {
-						MovementSpeed = 16f;
+						MovementSpeed = 8f;
 					}
 					isMoving = UpdateDirectedDirection ();
 				}
 				transform.localEulerAngles = currentDirection;
+				nextPosition = CheckPointPosition + transform.forward * deltaMovement;
 			} else {
 				transform.localEulerAngles = down;
+				nextPosition = CheckPointPosition;
 				isMoving = false;
 			}
 		}
 
 		if (isMoving) {
-			transform.Translate (RoundVector3 (Vector3.forward * (movementOffset / MovementSpeed), 2));
+			transform.position = nextPosition;
 		}
 
 	}
 
-	private bool AtCheckPoint() {
-		Vector3 pos = transform.position;
-		return Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.x / 4f, 2) - Mathf.Floor (pos.x / 4f))) &&
-			Mathf.Approximately (0.25f, (float)(System.Math.Round (pos.z / 4f, 2) - Mathf.Floor (pos.z / 4f)));
+	private bool CrossedCheckPoint(Vector3 nextPosition) {
+		Vector3 posibleCheckPoint;
+		float num;
+		if (currentDirection == up && Mathf.CeilToInt (transform.position.z) == Mathf.FloorToInt (nextPosition.z)) {
+			posibleCheckPoint = new Vector3 (transform.position.x, transform.position.y, Mathf.FloorToInt (nextPosition.z));
+			num = Mathf.Floor (nextPosition.z);
+			deltaMovement = nextPosition.z - num;
+		} else if (currentDirection == down && Mathf.FloorToInt (transform.position.z) == Mathf.CeilToInt (nextPosition.z)) {
+			posibleCheckPoint = new Vector3 (transform.position.x, transform.position.y, Mathf.CeilToInt (nextPosition.z));
+			num = Mathf.Ceil (nextPosition.z);
+			deltaMovement = num - nextPosition.z;
+		} else if (currentDirection == right && Mathf.CeilToInt (transform.position.x) == Mathf.FloorToInt (nextPosition.x)) {
+			posibleCheckPoint = new Vector3 (Mathf.FloorToInt (nextPosition.x), transform.position.y, transform.position.z);
+			num = Mathf.Floor (nextPosition.x);
+			deltaMovement = nextPosition.x - num;
+		} else if (currentDirection == left && Mathf.FloorToInt (transform.position.x) == Mathf.CeilToInt (nextPosition.x)) {
+			posibleCheckPoint = new Vector3 (Mathf.CeilToInt (nextPosition.x), transform.position.y, transform.position.z);
+			num = Mathf.Ceil (nextPosition.x);
+			deltaMovement = num - nextPosition.x;
+		} else {
+			return false;
+		}
+
+		if ( Mathf.Approximately(0.25f, (float)(System.Math.Round (num / 4f, 2) - Mathf.Floor (num / 4f))) ) {
+			CheckPointPosition = RoundVector3 (posibleCheckPoint, 1);
+			return true;
+		}
+		return false;
 	}
 
 	private void UpdateDirection() {
@@ -136,23 +163,19 @@ public class GhostController : ObserverPattern.Observer {
 		RaycastHit hit;
 		ArrayList posibleDirections = new ArrayList();
 
-		currentDirection = RoundVector3 (currentDirection, 0);
-
 		ifCanMoveAndNotOppositeAddToArrayList (up, posibleDirections);
 		ifCanMoveAndNotOppositeAddToArrayList (down, posibleDirections);
 		ifCanMoveAndNotOppositeAddToArrayList (left, posibleDirections);
 		ifCanMoveAndNotOppositeAddToArrayList (right, posibleDirections);
 
-		Vector3 curPosition = RoundVector3 (transform.position, 2);
-		Vector3 nextPosition;
-
-		transform.localEulerAngles = up;
+		Vector3 curPosition = CheckPointPosition;
+		Vector3 targetPosition;
 
 		foreach (var angle in posibleDirections) {
 			transform.localEulerAngles = (Vector3) angle;
-			//TODO: WTF. Check this numbers.
-			nextPosition = RoundVector3 (220 * 3 * movementOffset * transform.forward + transform.position, 2);
-			if (Physics.Raycast (curPosition, nextPosition, out hit)) {
+
+			targetPosition = RoundVector3 (220 * 3 * movementOffset * transform.forward + transform.position, 2);
+			if (Physics.Raycast (curPosition, targetPosition, out hit)) {
 				if (hit.collider.tag == "Pacman") {
 					if (isEatable) {
 						ifCanMoveAddToArrayList (OppositeDirection(currentDirection), posibleDirections);
@@ -171,9 +194,9 @@ public class GhostController : ObserverPattern.Observer {
 	}
 
 	private bool UpdateDirectedDirection() {
-		currentDirection = GetNewDirection (RoundVector3 (transform.position, 2));
+		currentDirection = GetNewDirection (CheckPointPosition);
 		transform.localEulerAngles = currentDirection;
-		return CanMove (GetBoardPosition (RoundVector3 (transform.position + transform.forward * movementOffset, 2)));
+		return CanMove (GetBoardPosition (CheckPointPosition + transform.forward * movementOffset));
 	}
 
 	private Vector3 OppositeDirection( Vector3 angle) {
@@ -199,7 +222,7 @@ public class GhostController : ObserverPattern.Observer {
 
 	private void ifCanMoveAddToArrayList( Vector3 angle, ArrayList posibleDirections) {
 		transform.localEulerAngles = angle;
-		if (CanMove (GetBoardPosition (RoundVector3 (transform.position + transform.forward * movementOffset, 2)))) {
+		if (CanMove (GetBoardPosition (CheckPointPosition + transform.forward * movementOffset))) {
 			posibleDirections.Add (angle);
 		}
 		transform.localEulerAngles = currentDirection;
@@ -288,7 +311,6 @@ public class GhostController : ObserverPattern.Observer {
 			isEatable = false;
 			transform.gameObject.tag = "Ghost";
 		}
-
 	}
 
 	void EatenProperties() {
