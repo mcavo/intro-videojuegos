@@ -22,6 +22,8 @@ public class PacmanController : MonoBehaviour {
 	private bool isJumping;
 	private float jumpingDistance;
 
+	private bool justReset;
+
 	private Vector3 up = Vector3.zero,
 					down = new Vector3(0,180,0),
 					right = new Vector3(0,90,0),
@@ -39,6 +41,7 @@ public class PacmanController : MonoBehaviour {
 		jumpingDistance = 0;
 		currentDirection = down;
 		nextDirection = down;
+		StartCoroutine (ResetRoutine ());
 	}
 
 	private void CheckInput() {
@@ -168,7 +171,7 @@ public class PacmanController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col) {
-		if (col.CompareTag("Ghost")) {
+		if (col.CompareTag("Ghost") && !justReset) {
 			animator.SetBool("IsDead", true);
 		} else if (col.CompareTag("PacDot")) {
 			IncrementScore (pointsPerPacDot);
@@ -189,5 +192,12 @@ public class PacmanController : MonoBehaviour {
 		Text scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
 		scoreText.text = score.ToString ();
 		scoreBorderText.text = score.ToString ();
+	}
+
+	public IEnumerator ResetRoutine()
+	{
+		justReset = true;
+		yield return new WaitForSeconds (2.0f);
+		justReset = false;
 	}
 }
