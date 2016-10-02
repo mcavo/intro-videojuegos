@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour {
 	private Text fruitTargetText;
 	private Text fruitTargetBorderText;
 
+	private GameObject PauseFeedBack;
+
 	private int pointsToSpawnCherry = 1000;
 
 	private Vector3 u = Vector3.zero,
@@ -58,6 +60,8 @@ public class GameManager : MonoBehaviour {
 		InitializeGhosts ();
 		fruitTargetText = GameObject.Find("FruitTarget").GetComponent<Text>();
 		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
+		PauseFeedBack = GameObject.Find ("Pause");
+		PauseFeedBack.SetActive (false);
 		StartCoroutine(PauseCoroutine());   
 	}
 
@@ -69,8 +73,10 @@ public class GameManager : MonoBehaviour {
 
 		if (pause) {
 			Time.timeScale = 0;
+			PauseFeedBack.SetActive (true);
 		} else {
 			Time.timeScale = 1;
+			PauseFeedBack.SetActive (false);
 		}
 
 		if (score >= pointsToSpawnCherry) {
