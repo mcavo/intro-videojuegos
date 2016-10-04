@@ -53,7 +53,8 @@ public class PacmanController : MonoBehaviour {
 			nextDirection = right;
 		} else if (Input.GetKey(KeyCode.LeftArrow)) {
 			nextDirection = left;
-		} else if (Input.GetKey(KeyCode.Space) && !isJumping) {
+		}
+		if (Input.GetKey(KeyCode.Space) && !isJumping) {
 			isJumping = true;
 		}
 	}
@@ -136,7 +137,9 @@ public class PacmanController : MonoBehaviour {
 
 		} else {
 
-			CheckInput ();
+			if (!GameManager.instance.paused) {
+				CheckInput ();
+			}
 
 			if (isJumping) {
 				jumpingDistance += MovementSpeed * Time.deltaTime;

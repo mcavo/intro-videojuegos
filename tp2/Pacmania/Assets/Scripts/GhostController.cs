@@ -257,13 +257,15 @@ public class GhostController : ObserverPattern.Observer {
 	}
 
 	override public void OnNotify() {
-		SetGhostColor (BodyColorEatable, EyesColorEatable, SolidAlpha);
-		transform.gameObject.tag = "EatableGhost";
-		isEatable = true;
-		if (co != null) {
-			StopCoroutine (co);
+		if(transform.gameObject.tag != "EatenGhost") {
+			SetGhostColor (BodyColorEatable, EyesColorEatable, SolidAlpha);
+			transform.gameObject.tag = "EatableGhost";
+			isEatable = true;
+			if (co != null) {
+				StopCoroutine (co);
+			}
+			co = StartCoroutine(EatableRoutine());
 		}
-		co = StartCoroutine(EatableRoutine());
 	}
 
 	void OnTriggerEnter(Collider col) {

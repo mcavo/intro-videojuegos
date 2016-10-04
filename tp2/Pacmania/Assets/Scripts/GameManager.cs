@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector] public Vector3[,] directions;
 	private int lives;
 	private int cherries;
-	private bool pause;
+	public bool paused;
 	public Point Cherry;
 
 	private Text fruitTargetText;
@@ -67,18 +67,6 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey (KeyCode.P)) {
-			pause = !pause;
-		}
-
-		if (pause) {
-			Time.timeScale = 0;
-			PauseFeedBack.SetActive (true);
-		} else {
-			Time.timeScale = 1;
-			PauseFeedBack.SetActive (false);
-		}
-
 		if (score >= pointsToSpawnCherry) {
 			if (GameObject.Find ("Cherry") == null) {
 				Cherry.gameObject.SetActive (true);
@@ -109,13 +97,16 @@ public class GameManager : MonoBehaviour {
 		{
 			if (Input.GetKeyDown(KeyCode.P))
 			{
-				if (Time.timeScale == 0)
-				{
-					Time.timeScale = 1;
-				} else {
-					Time.timeScale = 0;
-				}
+				paused = true;
+				Time.timeScale = 0;
+				PauseFeedBack.SetActive (true);
 			}    
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				paused = false;
+				Time.timeScale = 1;
+				PauseFeedBack.SetActive (false);
+			}  
 			yield return null;    
 		}
 	}
@@ -134,7 +125,7 @@ public class GameManager : MonoBehaviour {
 		// TODO : Load raycasting
 		// TODO : Desbloquear el loop y hacerlo 
 
-		pause = false;
+		paused = false;
 
 		board = new int[22, 19]
 			{ {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
