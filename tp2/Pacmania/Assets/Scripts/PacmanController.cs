@@ -221,7 +221,7 @@ public class PacmanController : MonoBehaviour {
 
 	public void PlayNomSound()
 	{
-//		SoundManager.instance.PlaySingle(NomClip);
+		SoundManager.instance.PlaySingle(NomClip);
 	}
 
 	public void EatGhostSound()
@@ -229,5 +229,3 @@ public class PacmanController : MonoBehaviour {
 		SoundManager.instance.PlaySingle(EatGhostClip);
 	}
 }
-
-// Q = dN/dt por ventana de tiempo e ir corriendo la ventana (para evitar el ruido?). Hago varias corridas y las tengo que promediar
