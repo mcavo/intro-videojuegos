@@ -189,7 +189,6 @@ public class PacmanController : MonoBehaviour {
 			IncrementScore (pointsPerCherry);
 			GameManager.instance.AddCherry ();
 			EatFruitSound ();
-			Debug.Log ("fruit");
 		} else if(col.CompareTag("EatableGhost")) {
 			IncrementScore (pointsPerGhost);
 			EatGhostSound ();

@@ -129,7 +129,6 @@ public class GameManager : MonoBehaviour {
 		lives = 3;
 		cherries = 0;
 		highScore = PlayerPrefs.GetInt (GameManager.HighScoreKey);
-		Debug.Log (highScore);
 	}
 
 	private void InitializeViews()
