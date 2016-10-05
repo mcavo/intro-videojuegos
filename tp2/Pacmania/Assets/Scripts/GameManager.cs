@@ -22,6 +22,11 @@ public class GameManager : MonoBehaviour {
 	private Text fruitTargetText;
 	private Text fruitTargetBorderText;
 
+	private Text scoreText;
+	private Text scoreBorderText;
+	private Text highscoreText;
+	private Text highscoreBorderText;
+
 	private GameObject PauseFeedBack;
 
 	private int pointsToSpawnCherry = 1000;
@@ -133,6 +138,12 @@ public class GameManager : MonoBehaviour {
 		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
 		PauseFeedBack = GameObject.Find ("Pause");
 		PauseFeedBack.SetActive (false);
+		scoreText = GameObject.Find("Score").GetComponent<Text>();
+		scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
+		highscoreText = GameObject.Find("HighScore").GetComponent<Text>();
+		highscoreBorderText = GameObject.Find("HighScoreBorder").GetComponent<Text>();
+		highscoreText.text = highScore.ToString ();
+		highscoreBorderText.text = highScore.ToString ();
 	}	
 
 	void InitGame() {
@@ -227,12 +238,22 @@ public class GameManager : MonoBehaviour {
 					
 	private void setHighScore(int score) 
 	{
+		Debug.Log ("enre");
 		PlayerPrefs.SetInt (GameManager.HighScoreKey, score);
-		Debug.Log (score);	
+		highscoreText.text = score.ToString();
+		highscoreBorderText.text = score.ToString();
+		Debug.Log (score);
 	}
 
 	public bool validateHighScore(int score)
 	{
 		return score > highScore;
+	}
+
+	public void UpdateScore(int score)
+	{
+		this.score = score;
+		scoreText.text = score.ToString ();
+		scoreBorderText.text = score.ToString ();
 	}
 }
