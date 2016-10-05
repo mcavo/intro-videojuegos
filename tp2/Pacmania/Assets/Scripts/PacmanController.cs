@@ -190,11 +190,8 @@ public class PacmanController : MonoBehaviour {
 
 	void IncrementScore(int points) {
 		score += points;
-		GameManager.instance.score = score;
-		Text scoreText = GameObject.Find("Score").GetComponent<Text>();
-		Text scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
-		scoreText.text = score.ToString ();
-		scoreBorderText.text = score.ToString ();
+		GameManager.instance.UpdateScore (score);
+
 	}
 
 	public IEnumerator ResetRoutine()

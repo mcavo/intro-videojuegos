@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
+	public static string HighScoreKey = "pacman_high_score_key";
 	public static GameManager instance = null;				// Static instance of GameManager which allows it to be accessed by any other script.
 	public GhostController[] ghosts;
 	public GameObject CherryImage;
@@ -21,6 +22,11 @@ public class GameManager : MonoBehaviour {
 	private Text fruitTargetText;
 	private Text fruitTargetBorderText;
 
+	private Text scoreText;
+	private Text scoreBorderText;
+	private Text highscoreText;
+	private Text highscoreBorderText;
+
 	private GameObject PauseFeedBack;
 
 	private int pointsToSpawnCherry = 1000;
@@ -31,6 +37,7 @@ public class GameManager : MonoBehaviour {
 					l = new Vector3(0,270,0),
 					n = Vector3.zero;
 
+	private int highScore;
 
 	void Awake() {
 		//Check if instance already exists
@@ -54,15 +61,10 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		score = 0;
-		lives = 3;
-		cherries = 0;
+		InitializeProperties ();
 		InitializeGhosts ();
-		fruitTargetText = GameObject.Find("FruitTarget").GetComponent<Text>();
-		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
-		PauseFeedBack = GameObject.Find ("Pause");
-		PauseFeedBack.SetActive (false);
-		StartCoroutine(PauseCoroutine());   
+		InitializeViews ();
+		StartCoroutine(PauseCoroutine());
 	}
 
 	// Update is called once per frame
@@ -111,7 +113,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void InitializeGhosts()
+	private void InitializeGhosts()
 	{
 		Transform ghostsContainer = GameObject.Find ("Ghosts").GetComponent<Transform> ();
 		for (int i = 0; i < ghosts.Length; i++) {
@@ -120,6 +122,29 @@ public class GameManager : MonoBehaviour {
 		}
 
 	}
+		
+	private void InitializeProperties() 
+	{
+		score = 0;
+		lives = 3;
+		cherries = 0;
+		highScore = PlayerPrefs.GetInt (GameManager.HighScoreKey);
+		Debug.Log (highScore);
+	}
+
+	private void InitializeViews()
+	{
+		fruitTargetText = GameObject.Find("FruitTarget").GetComponent<Text>();
+		fruitTargetBorderText = GameObject.Find("FruitTargetBorder").GetComponent<Text>();
+		PauseFeedBack = GameObject.Find ("Pause");
+		PauseFeedBack.SetActive (false);
+		scoreText = GameObject.Find("Score").GetComponent<Text>();
+		scoreBorderText = GameObject.Find("ScoreBorder").GetComponent<Text>();
+		highscoreText = GameObject.Find("HighScore").GetComponent<Text>();
+		highscoreBorderText = GameObject.Find("HighScoreBorder").GetComponent<Text>();
+		highscoreText.text = highScore.ToString ();
+		highscoreBorderText.text = highScore.ToString ();
+	}	
 
 	void InitGame() {
 		// TODO : Load raycasting
@@ -180,7 +205,12 @@ public class GameManager : MonoBehaviour {
 	public void RemoveLive() {
 		if (lives > 0) {
 			lives--;
-			GameObject.Find ("Lives").GetComponentsInChildren<SpriteRenderer> ()[lives].gameObject.SetActive (false);
+			GameObject.Find ("Lives").GetComponentsInChildren<SpriteRenderer> () [lives].gameObject.SetActive (false);
+		} else {
+			if (validateHighScore (score))
+			{ 
+				setHighScore(score);
+			}
 		}
 	}
 
@@ -191,7 +221,7 @@ public class GameManager : MonoBehaviour {
 			LivesSR [lives].gameObject.SetActive (true);
 		} else {
 			GameObject liveInstance = Instantiate (CherryImage, LivesGO.GetComponent<Transform> ()) as GameObject;
-			liveInstance.transform.localPosition = new Vector3 (0, 0, 0);
+			liveInstance.transform.localPosition = Vector3.zero;
 			liveInstance.transform.localScale = new Vector3 (15, 15, 15);
 		}
 		lives++;
@@ -204,5 +234,26 @@ public class GameManager : MonoBehaviour {
 		cherryInstance.transform.localRotation = new Quaternion(0.0f,0.0f,0.0f,0.0f);
 		cherryInstance.transform.localScale = new Vector3 (18, 18, 18);
 		cherries++;
+	}
+					
+	private void setHighScore(int score) 
+	{
+		Debug.Log ("enre");
+		PlayerPrefs.SetInt (GameManager.HighScoreKey, score);
+		highscoreText.text = score.ToString();
+		highscoreBorderText.text = score.ToString();
+		Debug.Log (score);
+	}
+
+	public bool validateHighScore(int score)
+	{
+		return score > highScore;
+	}
+
+	public void UpdateScore(int score)
+	{
+		this.score = score;
+		scoreText.text = score.ToString ();
+		scoreBorderText.text = score.ToString ();
 	}
 }
