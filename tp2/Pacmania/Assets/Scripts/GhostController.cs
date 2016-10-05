@@ -25,6 +25,7 @@ public class GhostController : ObserverPattern.Observer {
 	private bool isAlive = true;
 	private bool isEatable = false;
 	private bool justAwake = true;
+	private bool justHaveBeenEaten = false;
 
 	public int xMatrixPosition = 7; // 7 / 19
 	public int yMatrixPosition = 9; // 9 22
@@ -122,7 +123,7 @@ public class GhostController : ObserverPattern.Observer {
 			}
 		}
 
-		if (isMoving) {
+		if (isMoving && !justHaveBeenEaten) {
 			transform.position = nextPosition;
 		}
 
@@ -283,6 +284,8 @@ public class GhostController : ObserverPattern.Observer {
 	public IEnumerator GoBackRoutine()
 	{
 		while(!isAlive) {
+			yield return new WaitForSeconds (0.2f);
+			justHaveBeenEaten = false;
 			yield return new WaitForSeconds (7.0f);
 			for (int i = 1; i <= 10; i++) {
 				SetGhostColor (BodyColor, EyesColor, TransparentAlpha);
@@ -318,6 +321,7 @@ public class GhostController : ObserverPattern.Observer {
 	void EatenProperties() {
 		isAlive = false;
 		isEatable = false;
+		justHaveBeenEaten = true;
 		SetGhostColor (BodyColorEatable, EyesColorEatable, TransparentAlpha);
 	}
 
