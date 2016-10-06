@@ -15,7 +15,9 @@ public class PacmanController : MonoBehaviour {
 	private int pointsPerPowerPellet = 300;
 	private int pointsPerCherry = 1000;
 	private int pointsPerGhost = 1000;
+	private int pointsPerWin = 5000;
 	private int score;
+	private int dotsEaten;
 	private float deltaMovement;
 
 	private Animator animator;
@@ -127,6 +129,7 @@ public class PacmanController : MonoBehaviour {
 		QualitySettings.vSyncCount = 0;
 		animator = GetComponent<Animator> ();
 		score = GameManager.instance.score;
+		dotsEaten = 0;
 		Reset();
 	}
 
@@ -182,9 +185,19 @@ public class PacmanController : MonoBehaviour {
 			animator.SetBool("IsMoving", false);
 			animator.SetBool("IsDead", true);
 		} else if (col.CompareTag("PacDot")) {
+			dotsEaten++;
 			IncrementScore (pointsPerPacDot);
+			if (dotsEaten == GameManager.instance.dotsAmount) {
+				IncrementScore (pointsPerWin);
+				GameManager.instance.EndGame ();
+			}
 		} else if (col.CompareTag("PowerPellet")) {
+			dotsEaten++;
 			IncrementScore (pointsPerPowerPellet);
+			if (dotsEaten == GameManager.instance.dotsAmount) {
+				IncrementScore (pointsPerWin);
+				GameManager.instance.EndGame ();
+			}
 		} else if(col.CompareTag("Cherry")) {
 			IncrementScore (pointsPerCherry);
 			GameManager.instance.AddCherry ();

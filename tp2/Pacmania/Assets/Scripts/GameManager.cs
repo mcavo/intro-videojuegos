@@ -2,6 +2,7 @@
 using System.Collections;
 
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -9,15 +10,18 @@ public class GameManager : MonoBehaviour {
 	public static GameManager instance = null;				// Static instance of GameManager which allows it to be accessed by any other script.
 	public GhostController[] ghosts;
 	public GameObject CherryImage;
-	public GameObject LiveImage;
+	public GameObject LifeImage;
 
 	[HideInInspector] public int score;
 	[HideInInspector] public int[,] board;
 	[HideInInspector] public Vector3[,] directions;
+	[HideInInspector] public int dotsAmount;
 	private int lives;
 	private int cherries;
 	public bool paused;
 	public Point Cherry;
+
+	public GameObject Maze;
 
 	private Text fruitTargetText;
 	private Text fruitTargetBorderText;
@@ -117,7 +121,6 @@ public class GameManager : MonoBehaviour {
 	{
 		Transform ghostsContainer = GameObject.Find ("Ghosts").GetComponent<Transform> ();
 		for (int i = 0; i < ghosts.Length; i++) {
-//			yield return new WaitForSeconds (1.0f);
 			Instantiate (ghosts [i], ghostsContainer);
 		}
 
@@ -197,17 +200,26 @@ public class GameManager : MonoBehaviour {
 			, {n,u,r,r,r,r,r,r,u,r,u,l,l,l,l,l,l,u,n}
 			, {n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n}};
 
+		Instantiate (Maze);
+		dotsAmount = Maze.transform.GetComponentsInChildren<Point> ().Length;
 	}
+
+	public void EndGame () {
+		destroyOnLevel = true;
+		if (validateHighScore (score))
+		{ 
+			setHighScore(score);
+		}
+		SceneManager.LoadScene ("GameOver");
+	}
+
 
 	public void RemoveLive() {
 		if (lives > 0) {
 			lives--;
 			GameObject.Find ("Lives").GetComponentsInChildren<SpriteRenderer> () [lives].gameObject.SetActive (false);
 		} else {
-			if (validateHighScore (score))
-			{ 
-				setHighScore(score);
-			}
+			EndGame ();
 		}
 	}
 
