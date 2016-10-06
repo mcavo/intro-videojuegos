@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour {
 	private int highScore;
 
 	[HideInInspector] public bool destroyOnLevel;			// To destroy the instance on update
+	[HideInInspector] public bool endgame;
 
 	void Awake() {
 
@@ -83,12 +84,14 @@ public class GameManager : MonoBehaviour {
 			Destroy (gameObject);
 		}
 
-		if (score >= pointsToSpawnCherry) {
-			if (GameObject.Find ("Cherry") == null) {
-				Cherry.gameObject.SetActive (true);
-				StartCoroutine (ShowFruitTargetText ());
+		if (endgame) {
+			if (score >= pointsToSpawnCherry) {
+				if (GameObject.Find ("Cherry") == null) {
+					Cherry.gameObject.SetActive (true);
+					StartCoroutine (ShowFruitTargetText ());
+				}
+				pointsToSpawnCherry *= 2;
 			}
-			pointsToSpawnCherry *= 2;
 		}
 	}
 
@@ -215,7 +218,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void EndGame () {
-		destroyOnLevel = true;
+		endgame = true;
 		if (validateHighScore (score))
 		{ 
 			setHighScore(score);
