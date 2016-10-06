@@ -39,7 +39,8 @@ public class GameOver : MonoBehaviour
 	{
 		score = GameManager.instance.score;
 		highScore = GameManager.instance.getHighScore();
-
+		Debug.Log (score);
+		Debug.Log (highScore);
 		//Destroy GameManager instance
 		GameManager.instance.destroyOnLevel = true;
 	}

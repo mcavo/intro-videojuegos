@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour {
 			Destroy (gameObject);
 		}
 			
-		if (endgame) {
+		if (!endgame) {
 			if (score >= pointsToSpawnCherry) {
 				if (GameObject.Find ("Cherry") == null) {
 					Cherry.gameObject.SetActive (true);
@@ -223,6 +223,8 @@ public class GameManager : MonoBehaviour {
 		{ 
 			setHighScore(score);
 		}
+		Debug.Log (score);
+		Debug.Log (highScore);
 		SceneManager.LoadScene ("GameOver");
 	}
 
@@ -272,6 +274,8 @@ public class GameManager : MonoBehaviour {
 
 	public int getHighScore() 
 	{
+		Debug.Log (score);
+		Debug.Log (highScore);
 		return highScore;	
 	}
 
