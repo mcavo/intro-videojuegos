@@ -43,7 +43,11 @@ public class GameManager : MonoBehaviour {
 
 	private int highScore;
 
+	[HideInInspector] public bool destroyOnLevel;			// To destroy the instance on update
+
 	void Awake() {
+
+		destroyOnLevel = false;
 		//Check if instance already exists
 		if (instance == null)
 		{
@@ -73,6 +77,12 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+		if (destroyOnLevel)
+		{
+			Destroy (gameObject);
+		}
+
 		if (score >= pointsToSpawnCherry) {
 			if (GameObject.Find ("Cherry") == null) {
 				Cherry.gameObject.SetActive (true);
@@ -255,6 +265,11 @@ public class GameManager : MonoBehaviour {
 	public bool validateHighScore(int score)
 	{
 		return score > highScore;
+	}
+
+	public int getHighScore() 
+	{
+		return highScore;	
 	}
 
 	public void UpdateScore(int score)
