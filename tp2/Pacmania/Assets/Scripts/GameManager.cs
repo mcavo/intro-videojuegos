@@ -223,8 +223,6 @@ public class GameManager : MonoBehaviour {
 		{ 
 			setHighScore(score);
 		}
-		Debug.Log (score);
-		Debug.Log (highScore);
 		SceneManager.LoadScene ("GameOver");
 	}
 
@@ -274,8 +272,6 @@ public class GameManager : MonoBehaviour {
 
 	public int getHighScore() 
 	{
-		Debug.Log (score);
-		Debug.Log (highScore);
 		return highScore;	
 	}
 
