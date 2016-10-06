@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour {
 	public bool paused;
 	public Point Cherry;
 
-	public GameObject Maze;
-
 	private Text fruitTargetText;
 	private Text fruitTargetBorderText;
 
@@ -213,8 +211,7 @@ public class GameManager : MonoBehaviour {
 			, {n,u,r,r,r,r,r,r,u,r,u,l,l,l,l,l,l,u,n}
 			, {n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n}};
 
-		Instantiate (Maze);
-		dotsAmount = Maze.transform.GetComponentsInChildren<Point> ().Length;
+		dotsAmount = GameObject.Find("LegoMaze").transform.GetComponentsInChildren<Point> ().Length;
 	}
 
 	public void EndGame () {
