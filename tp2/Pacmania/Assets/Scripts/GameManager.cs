@@ -129,7 +129,6 @@ public class GameManager : MonoBehaviour {
 		lives = 3;
 		cherries = 0;
 		highScore = PlayerPrefs.GetInt (GameManager.HighScoreKey);
-		Debug.Log (highScore);
 	}
 
 	private void InitializeViews()
@@ -147,9 +146,7 @@ public class GameManager : MonoBehaviour {
 	}	
 
 	void InitGame() {
-		// TODO : Load raycasting
-		// TODO : Desbloquear el loop y hacerlo 
-
+		
 		paused = false;
 
 		board = new int[22, 19]
@@ -238,11 +235,9 @@ public class GameManager : MonoBehaviour {
 					
 	private void setHighScore(int score) 
 	{
-		Debug.Log ("enre");
 		PlayerPrefs.SetInt (GameManager.HighScoreKey, score);
 		highscoreText.text = score.ToString();
 		highscoreBorderText.text = score.ToString();
-		Debug.Log (score);
 	}
 
 	public bool validateHighScore(int score)

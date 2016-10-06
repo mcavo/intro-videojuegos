@@ -6,6 +6,10 @@ using System.Collections;
 public class PacmanController : MonoBehaviour {
 
 	public float MovementSpeed = 0f;
+	public AudioClip DeathClip;
+	public AudioClip NomClip;
+	public AudioClip EatGhostClip;
+	public AudioClip EatFruitClip;
 
 	private int pointsPerPacDot = 60;
 	private int pointsPerPowerPellet = 300;
@@ -175,6 +179,7 @@ public class PacmanController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col) {
 		if (col.CompareTag("Ghost") && !justReset) {
+			animator.SetBool("IsMoving", false);
 			animator.SetBool("IsDead", true);
 		} else if (col.CompareTag("PacDot")) {
 			IncrementScore (pointsPerPacDot);
@@ -183,8 +188,10 @@ public class PacmanController : MonoBehaviour {
 		} else if(col.CompareTag("Cherry")) {
 			IncrementScore (pointsPerCherry);
 			GameManager.instance.AddCherry ();
+			EatFruitSound ();
 		} else if(col.CompareTag("EatableGhost")) {
 			IncrementScore (pointsPerGhost);
+			EatGhostSound ();
 		}
 	}
 
@@ -199,5 +206,25 @@ public class PacmanController : MonoBehaviour {
 		justReset = true;
 		yield return new WaitForSeconds (2.0f);
 		justReset = false;
+	}
+
+	public void PlayDeathSound()
+	{
+		SoundManager.instance.PlaySingle(DeathClip);
+	}
+
+	public void EatFruitSound()
+	{
+		SoundManager.instance.PlaySingle(EatFruitClip);
+	}
+
+	public void PlayNomSound()
+	{
+		SoundManager.instance.PlaySingle(NomClip);
+	}
+
+	public void EatGhostSound()
+	{
+		SoundManager.instance.PlaySingle(EatGhostClip);
 	}
 }
