@@ -103,14 +103,14 @@ public class GhostController : ObserverPattern.Observer {
 				if (isAlive && !justAwake) {
 					MovementSpeed = 10f;
 					if (isEatable) {
-						MovementSpeed = 8f;
+						MovementSpeed = 6f;
 					}
 					UpdateDirection ();
 				} else {
 					if (justAwake) {
 						MovementSpeed = 10f;
 					} else {
-						MovementSpeed = 8f;
+						MovementSpeed = 6f;
 					}
 					isMoving = UpdateDirectedDirection ();
 				}
