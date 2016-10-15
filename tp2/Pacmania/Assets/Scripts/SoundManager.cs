@@ -4,6 +4,7 @@ using System.Collections;
 public class SoundManager : MonoBehaviour {
 
 	public AudioSource efxSource;                   // Drag a reference to the audio source which will play the sound effects.
+	public AudioSource efxLoopSource; 
 	public AudioSource musicSource;                 // Drag a reference to the audio source which will play the music.
 	public AudioClip musicClip;
 	public static SoundManager instance = null;     // Allows other scripts to call functions from SoundManager.             
@@ -30,6 +31,20 @@ public class SoundManager : MonoBehaviour {
 
 		//Play the clip.
 		efxSource.Play ();
+	}
+
+	public void PlayOnLoop(AudioClip clip) {
+		if (!efxLoopSource.isPlaying) {
+			efxLoopSource.loop = true;
+			efxLoopSource.clip = clip;
+			efxLoopSource.Play ();
+		}
+	}
+
+	public void StopOnLoop() {
+		if (efxLoopSource.isPlaying) {
+			efxLoopSource.Stop ();
+		}
 	}
 
 	public void playBasicMusic()

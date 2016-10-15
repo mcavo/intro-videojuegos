@@ -171,6 +171,12 @@ public class PacmanController : MonoBehaviour {
 
 			animator.SetBool ("IsMoving", isMoving);
 
+			if (isMoving || isJumping) {
+				PlayNomSound ();
+			} else {
+				StopNomSound ();
+			}
+
 			transform.position = nextPosition;
 
 		}
@@ -182,6 +188,7 @@ public class PacmanController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col) {
 		if (col.CompareTag("Ghost") && !justReset) {
+			StopNomSound ();
 			animator.SetBool("IsMoving", false);
 			animator.SetBool("IsDead", true);
 		} else if (col.CompareTag("PacDot")) {
@@ -233,7 +240,12 @@ public class PacmanController : MonoBehaviour {
 
 	public void PlayNomSound()
 	{
-		SoundManager.instance.PlaySingle(NomClip);
+		SoundManager.instance.PlayOnLoop(NomClip);
+	}
+
+	public void StopNomSound()
+	{
+		SoundManager.instance.StopOnLoop();
 	}
 
 	public void EatGhostSound()

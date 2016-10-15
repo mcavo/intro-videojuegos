@@ -32,7 +32,9 @@ public class PowerPelletController : MonoBehaviour {
 		}
 	}
 	void OnTriggerEnter(Collider col) {
+		Debug.Log ("Hola1");
 		if (col.CompareTag("Pacman")) {
+			Debug.Log ("Hola2");
 			ObserverPattern.Subject.getInstance().Notify (); //Notify ghosts when pacman eat it
 		}
 	}
