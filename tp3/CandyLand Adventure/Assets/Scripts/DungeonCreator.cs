@@ -8,6 +8,7 @@ using System.Linq;
 public class DungeonCreator : MonoBehaviour {
 
 	public Module[] Modules;
+	public Module Wall;
 	public int MatrixSize = 4;
 
 	public int Seed;
@@ -16,6 +17,8 @@ public class DungeonCreator : MonoBehaviour {
 	private float delta = 2f;
 	public float deltaDistance = 40;
 	public GameObject sphere;
+	private int xIndex;
+	private int yIndex;
 
 	private Transform Dungeon;
 
@@ -29,7 +32,7 @@ public class DungeonCreator : MonoBehaviour {
 
 	private int[] GetMatrixPosition (Vector3 position)
 	{
-		return new int[]{ (int)((position.x + 20) / 40), (int)((position.z + 20) / 40) };
+		return new int[]{ Mathf.FloorToInt((position.x + 42.5f) / 40) + xIndex, Mathf.FloorToInt((position.z - 2f) / 40) + yIndex};
 	}
 
 	public void Generate()
@@ -42,42 +45,95 @@ public class DungeonCreator : MonoBehaviour {
 		startModule.transform.SetParent (Dungeon);
 		var pendingExits = new List<ModuleConnector>(startModule.GetExits());
 		var matrix = new int[MatrixSize, MatrixSize];
-		//int x = Random.Range (0, MatrixSize);
-		//int y = Random.Range (0, MatrixSize);
-		int xPos = 0;
-		int yPos = 0;
-		Debug.Log (xPos + " " + yPos);
-		matrix[xPos,yPos] = 1;
+		xIndex = Random.Range (0, MatrixSize);
+		yIndex = Random.Range (0, MatrixSize);
+		Debug.Log (xIndex + " " + yIndex);
+		matrix[xIndex,yIndex] = 1;
 
 		do
 		{
 			var newExits = new List<ModuleConnector>();
+			var duplicatedExits = new List<ModuleConnector>();
 
-			foreach (var pendingExit in pendingExits) {
-				if (CheckForChunck (matrix, pendingExit)) {
-					var newTag = GetRandom (pendingExit.Tags);
-					var newModulePrefab = GetRandomWithTag (Modules, newTag);
-					var newModule = (Module)Instantiate (newModulePrefab);
-					newModule.transform.SetParent (Dungeon);
-					var newModuleExits = newModule.GetExits ();
-					var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
-					MatchExits (pendingExit, exitToMatch);
-					newExits.AddRange (newModuleExits.Where (e => e != exitToMatch));
-					var n = pendingExit.transform.position + pendingExit.transform.forward * delta;
-					Debug.Log(n.x + " " + n.z);
-					int[] position = GetMatrixPosition (n);
+			for (int i=0 ; i<pendingExits.Count ; i++) {
+				
+				var pendingExit = pendingExits[i];
+				var foundDuplicated = false;
 
-					matrix [position [0], position [1]] = 1;
+				foreach (var p in duplicatedExits) {
+					if (checkEqualPoints(p.transform.position, pendingExit.transform.position)) {
+						foundDuplicated = true;
+						break;
+					}
+				}
 
-				} else {
-					// Agregue la pared
-				} 
+				if (!foundDuplicated) {
+					if (CheckForChunck (matrix, pendingExit)) {
+						
+						var newTag = GetRandom (pendingExit.Tags);
+						var newModulePrefab = GetRandomWithTag (Modules, newTag);
+
+						var newModule = (Module)Instantiate (newModulePrefab);
+						newModule.transform.SetParent (Dungeon);
+
+						var newModuleExits = newModule.GetExits ();
+						var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
+						MatchExits (pendingExit, exitToMatch);
+
+						newExits.AddRange (newModuleExits.Where (e => e != exitToMatch));
+
+						var n = pendingExit.transform.position + pendingExit.transform.forward * delta;
+						int[] position = GetMatrixPosition (n);
+
+						matrix [position [0], position [1]] = 1;
+
+					} else {
+						
+						ModuleConnector checkDuplicated;
+						foundDuplicated = false;
+						for(int j = 0 ; j < pendingExits.Count ; j ++) {
+							checkDuplicated = pendingExits[j];
+							if(j!=i) {
+								if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position)) {
+									duplicatedExits.Add(pendingExit);
+									foundDuplicated = true;
+									break;
+								}
+							}
+						}
+						if (!foundDuplicated) {
+							foundDuplicated = false;
+							for (int j = 0 ; j < newExits.Count ; j ++){
+								checkDuplicated = newExits[j];
+								if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position)) {
+									duplicatedExits.Add(pendingExit);
+									foundDuplicated = true;
+									break;
+								}
+							}
+							if (!foundDuplicated) {
+								var newModule = (Module)Instantiate (Wall);
+								newModule.transform.SetParent (Dungeon);
+								var newModuleExits = newModule.GetExits ();
+								var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
+								MatchExits (pendingExit, exitToMatch);
+							}
+						}
+					} 
+				}
 			}
 
 			pendingExits = newExits;
 
 		} while (pendingExits.Count != 0);
 
+	}
+
+	private bool checkEqualPoints(Vector3 p1, Vector3 p2) {
+		float auxX = p1.x - p2.x;
+		float auxZ = p1.z - p2.z;
+		return Mathf.Approximately (p1.x, p2.x) && Mathf.Approximately (p1.z, p2.z);
+		//return (auxX < 0.5f || auxX > -0.5f) && (auxZ < 0.5f || auxZ > -0.5f);
 	}
 
 	private bool CheckForChunck(int[,] matrix, ModuleConnector pendingExit)
