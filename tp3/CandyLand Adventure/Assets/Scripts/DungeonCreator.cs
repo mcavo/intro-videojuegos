@@ -47,22 +47,24 @@ public class DungeonCreator : MonoBehaviour {
 		var matrix = new int[MatrixSize, MatrixSize];
 		xIndex = Random.Range (0, MatrixSize);
 		yIndex = Random.Range (0, MatrixSize);
-		Debug.Log (xIndex + " " + yIndex);
 		matrix[xIndex,yIndex] = 1;
 
 		do
 		{
 			var newExits = new List<ModuleConnector>();
 			var duplicatedExits = new List<ModuleConnector>();
+			var count = 0;
 
 			for (int i=0 ; i<pendingExits.Count ; i++) {
 				
 				var pendingExit = pendingExits[i];
 				var foundDuplicated = false;
 
+
 				foreach (var p in duplicatedExits) {
 					if (checkEqualPoints(p.transform.position, pendingExit.transform.position)) {
 						foundDuplicated = true;
+						count = count + 1;
 						break;
 					}
 				}
@@ -91,23 +93,21 @@ public class DungeonCreator : MonoBehaviour {
 						
 						ModuleConnector checkDuplicated;
 						foundDuplicated = false;
-						for(int j = 0 ; j < pendingExits.Count ; j ++) {
+						for(int j = i+1 ; j < pendingExits.Count ; j ++) {
 							checkDuplicated = pendingExits[j];
-							if(j!=i) {
-								if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position)) {
-									duplicatedExits.Add(pendingExit);
-									foundDuplicated = true;
-									break;
-								}
+							if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position)) {
+								duplicatedExits.Add(pendingExit);
+								foundDuplicated = true;
+								break;
 							}
 						}
 						if (!foundDuplicated) {
-							foundDuplicated = false;
 							for (int j = 0 ; j < newExits.Count ; j ++){
 								checkDuplicated = newExits[j];
 								if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position)) {
 									duplicatedExits.Add(pendingExit);
 									foundDuplicated = true;
+									newExits.Add(pendingExit);
 									break;
 								}
 							}
@@ -122,18 +122,15 @@ public class DungeonCreator : MonoBehaviour {
 					} 
 				}
 			}
-
 			pendingExits = newExits;
+
 
 		} while (pendingExits.Count != 0);
 
 	}
 
 	private bool checkEqualPoints(Vector3 p1, Vector3 p2) {
-		float auxX = p1.x - p2.x;
-		float auxZ = p1.z - p2.z;
 		return Mathf.Approximately (p1.x, p2.x) && Mathf.Approximately (p1.z, p2.z);
-		//return (auxX < 0.5f || auxX > -0.5f) && (auxZ < 0.5f || auxZ > -0.5f);
 	}
 
 	private bool CheckForChunck(int[,] matrix, ModuleConnector pendingExit)
