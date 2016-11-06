@@ -8,22 +8,48 @@ public class Module : MonoBehaviour
 	public string[] Tags;
 	public Chunks type;
 	public Bonus[] bonuses;
+	public Trap[] traps;
 
 	public ModuleConnector[] GetExits()
 	{
 		return GetComponentsInChildren<ModuleConnector>();
 	}
 
-	public BonusAnchor[] GetAnchors(int level)
+	public BonusAnchor[] GetBonusAnchors(int level)
 	{
-		BonusAnchor[] anchors = GetComponentsInChildren<BonusAnchor>();
-		BonusAnchor[] filterAnchors = anchors.Where (c => c.minorLevel <= level).ToArray ();
-		return filterAnchors;
+		return GetComponentsInChildren<BonusAnchor>().Where (c => c.minorLevel <= level).ToArray ();
+	}
+
+	public TrapAnchor[] GetTrapAnchors(int level)
+	{
+		return GetComponentsInChildren<TrapAnchor>().Where (c => c.minorLevel <= level).ToArray ();
 	}
 
 	public void Decorate(int level) 
 	{
-		BonusAnchor[] bonusAnchors = GetAnchors (level);
+		addBonus (level);
+		addTraps (level);
+	}
+
+	public Bonus getBonus(int level)
+	{
+		var bonusPrefab = bonuses[Random.Range(0, bonuses.Length)];
+		Bonus bonus = (Bonus)Instantiate (bonusPrefab);
+		bonus.SetLevel (0);
+		return bonus;
+	}
+
+	public Trap getTrap(int level)
+	{
+		var trapPrefab = traps[Random.Range(0, traps.Length)];
+		Trap trap = (Trap)Instantiate (trapPrefab);
+		trap.SetLevel (0);
+		return trap;
+	}
+
+	public void addBonus(int level)
+	{
+		BonusAnchor[] bonusAnchors = GetBonusAnchors (level);
 		foreach (BonusAnchor bonusAnchor in bonusAnchors) 
 		{
 			// TODO: condition should be change with level var.
@@ -35,11 +61,17 @@ public class Module : MonoBehaviour
 		}
 	}
 
-	public Bonus getBonus(int level)
+	public void addTraps(int level)
 	{
-		var bonudPrefab = bonuses[Random.Range(0, bonuses.Length)];
-		Bonus bonus = (Bonus)Instantiate (bonudPrefab);
-		bonus.SetLevel (0);
-		return bonus;
+		TrapAnchor[] trapAnchors = GetTrapAnchors (level);
+		foreach (TrapAnchor trapAnchor in trapAnchors) 
+		{
+			// TODO: condition should be change with level var.
+			if (Random.Range (0, 1) == 0) {
+				Trap trap = getTrap (level);
+				trap.transform.position = trapAnchor.transform.position;
+				trap.transform.parent = transform;	
+			}
+		}
 	}
 }

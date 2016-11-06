@@ -3,6 +3,7 @@ using System.Collections;
 
 public class TrapAnchor : MonoBehaviour {
 
-	private int minorLevel;
+	// Default value
+	public int minorLevel = 1;
 
 }

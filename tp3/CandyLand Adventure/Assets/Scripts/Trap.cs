@@ -4,15 +4,10 @@ using System.Collections;
 // Extends from BlinkingObject to regulate difficulty
 public class Trap : BlinkingObject {
 
-	public Bonus[] bonuses;
+	public float reduceSpeed;
+	public float reduceTime;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	void OnTriggerEnter(Collider col) {
+		gameObject.SetActive (false);
 	}
 }
