@@ -1,14 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bonus : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-			
-	}
+public class Bonus : BlinkingObject {
 
 	void OnTriggerEnter(Collider col) {
+		StopBlinking ();
 		gameObject.SetActive (false);
 	}
 }

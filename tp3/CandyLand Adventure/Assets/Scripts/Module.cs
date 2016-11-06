@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 public enum Chunks { BeveledRoom, Corridor, Junction, Junction2, Junction3, Room, ThreeExitCorridor, Wall }
 
@@ -6,87 +7,39 @@ public class Module : MonoBehaviour
 {
 	public string[] Tags;
 	public Chunks type;
-	public Bonus[] bonus;
+	public Bonus[] bonuses;
 
 	public ModuleConnector[] GetExits()
 	{
 		return GetComponentsInChildren<ModuleConnector>();
 	}
 
+	public BonusAnchor[] GetAnchors(int level)
+	{
+		BonusAnchor[] anchors = GetComponentsInChildren<BonusAnchor>();
+		BonusAnchor[] filterAnchors = anchors.Where (c => c.minorLevel <= level).ToArray ();
+		return filterAnchors;
+	}
+
 	public void Decorate(int level) 
 	{
-		switch (type) 
+		BonusAnchor[] bonusAnchors = GetAnchors (level);
+		foreach (BonusAnchor bonusAnchor in bonusAnchors) 
 		{
-		case Chunks.BeveledRoom:
-			DecorateBeveledRoom (level);
-			break;
-		case Chunks.Corridor:
-			DecorateCorridor (level);
-			break;
-		case Chunks.Junction:
-			DecorateJunction (level);
-			break;
-		case Chunks.Junction2:
-			DecorateJunction2 (level);
-			break;
-		case Chunks.Room:
-			DecorateRoom (level);
-			break;
-		case Chunks.ThreeExitCorridor:
-			DecorateThreeExitCorridor (level);
-			break;
+			// TODO: condition should be change with level var.
+			if (Random.Range (0, 1) == 0) {
+				Bonus bonus = getBonus (level);
+				bonus.transform.position = bonusAnchor.transform.position;
+				bonus.transform.parent = transform;	
+			}
 		}
 	}
 
-	private void DecorateBeveledRoom(int level) {
-		//TODO: is missing to use level parameter
-		for (int i = 0; i < 2; i++) {
-			Bonus b = getBonus ();
-			b.transform.position = new Vector3 (i * 2f + 1, transform.position.y, i * 10f + 3);
-			b.transform.parent = transform;
-		}
-	}
-
-	private void DecorateCorridor(int level) {
-		if (level > 4)
-		{
-			//TODO: set some traps
-		}
-	}
-
-	private void DecorateJunction(int level) {
-		if (level > 3)
-		{
-			//TODO: set some traps
-		}
-	}
-
-	private void DecorateJunction2(int level) {
-		if (level > 3)
-		{
-			//TODO: set some traps
-		}
-	}
-
-	private void DecorateRoom(int level) {
-		//TODO: is missing to use level parameter
-		for (int i = 0; i < 2; i++) {
-			Bonus b = getBonus ();
-			b.transform.position = new Vector3 (i * 2f + 1, transform.position.y, i * 10f + 3);
-			b.transform.parent = transform;
-		}
-	}
-
-	private void DecorateThreeExitCorridor(int level) {
-		if (level > 3)
-		{
-			//TODO: set some traps
-		}
-	}
-
-	public Bonus getBonus()
+	public Bonus getBonus(int level)
 	{
-		var bonudPrefab = bonus[Random.Range(0, bonus.Length)];
-		return (Bonus)Instantiate (bonudPrefab);
+		var bonudPrefab = bonuses[Random.Range(0, bonuses.Length)];
+		Bonus bonus = (Bonus)Instantiate (bonudPrefab);
+		bonus.SetLevel (0);
+		return bonus;
 	}
 }
