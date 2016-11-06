@@ -60,6 +60,7 @@ public class DungeonCreator : MonoBehaviour {
 		ShuffleList(PosiblePrefabs);
 		for (int i = 0; i < PosiblePrefabs.Count; i++) {
 			var newModule = (Module)Instantiate (PosiblePrefabs [i]);
+			newModule.Decorate(1);
 			newModule.transform.SetParent (Dungeon);
 
 			var newModuleExits = newModule.GetExits ();
@@ -120,6 +121,7 @@ public class DungeonCreator : MonoBehaviour {
 			if (current == end)
 			{  
 				var newModule = (Module)Instantiate (endModule);
+				newModule.Decorate (1);
 				newModule.transform.SetParent (Dungeon);
 				var newModuleExits = newModule.GetExits ();
 				var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
@@ -171,6 +173,7 @@ public class DungeonCreator : MonoBehaviour {
 						var newModulePrefab = GetRandomWithTag (Modules, newTag);
 
 						var newModule = (Module)Instantiate (newModulePrefab);
+						newModule.Decorate(1);
 						newModule.transform.SetParent (Dungeon);
 
 						var newModuleExits = newModule.GetExits ();
@@ -208,6 +211,7 @@ public class DungeonCreator : MonoBehaviour {
 							}
 							if (!foundDuplicated) {
 								var newModule = (Module)Instantiate (Wall);
+								newModule.Decorate(1);
 								newModule.transform.SetParent (Dungeon);
 								var newModuleExits = newModule.GetExits ();
 								var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
