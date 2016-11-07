@@ -33,7 +33,6 @@ public class MoveCameraScript : MonoBehaviour {
 
 		if (Input.GetKey (KeyCode.UpArrow)) {
 			if (! Physics.Raycast (transform.localPosition, transform.forward, out hit, MovementSpeed * Time.deltaTime)) {
-				Debug.Log (MovementSpeed);
 				transform.localPosition = transform.localPosition + transform.forward * MovementSpeed * Time.deltaTime;
 			}
 		} else if (Input.GetKey (KeyCode.DownArrow)) {
@@ -47,7 +46,6 @@ public class MoveCameraScript : MonoBehaviour {
 		if (col.tag == "Trap") {
 			trapped (col.GetComponent<Trap>());	
 		} else if (col.tag == "Bonus") {
-			Debug.Log ("Bonus");
 		}	
 	}
 

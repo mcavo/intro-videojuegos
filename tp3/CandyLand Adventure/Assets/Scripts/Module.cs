@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-public enum Chunks { BeveledRoom, Corridor, Junction, Junction2, Junction3, Room, ThreeExitCorridor, Wall }
-
 public class Module : MonoBehaviour
 {
 	public string[] Tags;
-	public Chunks type;
 	public Bonus[] bonuses;
 	public Trap[] traps;
 
