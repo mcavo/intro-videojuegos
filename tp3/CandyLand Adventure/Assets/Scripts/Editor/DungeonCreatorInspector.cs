@@ -23,7 +23,7 @@ public class DungeonCreatorInspector : Editor {
 
 		//myTarget.seed = EditorGUILayout.IntField("Seed", myTarget.seed);
 
-		EditorGUILayout.HelpBox ("In order to play your dungeon, put the Dungeon prefab at the Assets/Prefabs/Dungeon folder.\nAnd later, add that prefab to the Dungeon list at the GameManager prefab, located at the Assets/Prefabs folder.",MessageType.Info);
+		EditorGUILayout.HelpBox ("Hola",MessageType.Info);
 
 		if (GUILayout.Button("Create"))
 		{
