@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Dungeon : MonoBehaviour {
 
-	public string Name;
 	public int Size;
 	public int SimpleWayModules;
 	public int TotalModules;

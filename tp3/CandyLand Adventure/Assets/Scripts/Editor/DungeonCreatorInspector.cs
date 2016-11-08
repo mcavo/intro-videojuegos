@@ -30,9 +30,9 @@ public class DungeonCreatorInspector : Editor {
 			GameObject.Find("DungeonCreator").GetComponent<DungeonCreator>().Generate();
 		}
 
-		if (GUILayout.Button("Clear"))
+		if (GUILayout.Button("Delete"))
 		{
-			GameObject.Find("DungeonCreator").GetComponent<DungeonCreator>().Clear();
+			GameObject.Find("DungeonCreator").GetComponent<DungeonCreator>().Delete();
 		}
 
 	}

@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 09b71ad13f6e34ec399a799c7b12e866
+timeCreated: 1478615948
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Teen
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 2adc9a323fa094ae49a45559d63ae28b, type: 3}
+  - {fileID: 12800000, guid: 5f1738bb14d9a46a795bd4646f29470f, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

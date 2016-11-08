@@ -6,28 +6,28 @@ using System.Linq;
 
 [ExecuteInEditMode]
 public class DungeonCreator : MonoBehaviour {
-	
+
+	public GameObject DungeonGO;
 	public Module startModule;
 	public Module endModule;
 	public Module[] Modules;
 	public Module Wall;
-	public int MatrixSize = 4;
 
 	public int Seed;
+	public int MatrixSize = 4;
 	public Vector2 start;
 	public Vector2 end;
+
+	public string Name;
+
 	private float delta = 2f;
-	public float deltaDistance = 40;
-	private Dungeon DungeonScript;
+	private float deltaDistance = 40;
 
-	private Transform Dungeon;
+	private GameObject Dungeon;
 
-	public void Clear()
+	public void Delete()
 	{
-		var modulesToClear = new List<Module>(GameObject.Find ("Dungeon").GetComponentsInChildren<Module>());
-		foreach (var m in modulesToClear) {
-			DestroyImmediate(m.gameObject);
-		}
+		DestroyImmediate(Dungeon);
 	}
 
 	private Vector2 GetMatrixPosition (Vector3 position)
@@ -61,7 +61,7 @@ public class DungeonCreator : MonoBehaviour {
 		for (int i = 0; i < PosiblePrefabs.Count; i++) {
 			var newModule = (Module)Instantiate (PosiblePrefabs [i]);
 			newModule.Decorate(1);
-			newModule.transform.SetParent (Dungeon);
+			newModule.transform.SetParent (Dungeon.transform);
 
 			var newModuleExits = newModule.GetExits ();
 
@@ -79,7 +79,7 @@ public class DungeonCreator : MonoBehaviour {
 						Vector2 position = GetMatrixPosition (n);
 
 						matrix [(int)position.x, (int)position.y] = 1;
-						DungeonScript.AddSimpleWayModule ();
+						Dungeon.GetComponent<Dungeon>().AddSimpleWayModule ();
 						return e;
 					}
 				}
@@ -95,12 +95,12 @@ public class DungeonCreator : MonoBehaviour {
 	{
 		Random.InitState (Seed);
 
-		Dungeon = GameObject.Find ("Dungeon").GetComponent<Transform>();
-		DungeonScript = Dungeon.GetComponent<Dungeon> ();
-		DungeonScript.Initialize (MatrixSize);
+		Dungeon = Instantiate(DungeonGO) as GameObject;
+		Dungeon.name = Name;
+		Dungeon.GetComponent<Dungeon>().Initialize (MatrixSize);
 		var startsModule = (Module) Instantiate(startModule, transform.position, transform.rotation);
-		DungeonScript.AddSimpleWayModule ();
-		startsModule.transform.SetParent (Dungeon);
+		Dungeon.GetComponent<Dungeon>().AddSimpleWayModule ();
+		startsModule.transform.SetParent (Dungeon.transform);
 		var pendingExits = new List<ModuleConnector>(startsModule.GetExits());
 		var matrix = new int[MatrixSize, MatrixSize];
 		var endWay = false;
@@ -123,9 +123,9 @@ public class DungeonCreator : MonoBehaviour {
 			if (current == end)
 			{  
 				var newModule = (Module)Instantiate (endModule);
-				DungeonScript.AddSimpleWayModule ();
+				Dungeon.GetComponent<Dungeon>().AddSimpleWayModule ();
 				newModule.Decorate (1);
-				newModule.transform.SetParent (Dungeon);
+				newModule.transform.SetParent (Dungeon.transform);
 				var newModuleExits = newModule.GetExits ();
 				var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
 				MatchExits (exitP, exitToMatch);
@@ -176,9 +176,9 @@ public class DungeonCreator : MonoBehaviour {
 						var newModulePrefab = GetRandomWithTag (Modules, newTag);
 
 						var newModule = (Module)Instantiate (newModulePrefab);
-						DungeonScript.AddModule();
+						Dungeon.GetComponent<Dungeon>().AddModule();
 						newModule.Decorate(1);
-						newModule.transform.SetParent (Dungeon);
+						newModule.transform.SetParent (Dungeon.transform);
 
 						var newModuleExits = newModule.GetExits ();
 						var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
@@ -216,7 +216,7 @@ public class DungeonCreator : MonoBehaviour {
 							if (!foundDuplicated) {
 								var newModule = (Module)Instantiate (Wall);
 								newModule.Decorate(1);
-								newModule.transform.SetParent (Dungeon);
+								newModule.transform.SetParent (Dungeon.transform);
 								var newModuleExits = newModule.GetExits ();
 								var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
 								MatchExits (pendingExit, exitToMatch);
