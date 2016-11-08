@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bonus : BlinkingObject {
+public class Bonus : MonoBehaviour {
 
-	public int points;
-	public float speed;
-	public float time;
+	public float incrementSpeed = 5f;
+	public float incrementTime = 1f;
+	public float duration = 1f;
 
 	void OnTriggerEnter(Collider col) {
-		StopBlinking ();
+		GameManager.instance.TimeLeft -= incrementTime;
 		gameObject.SetActive (false);
 	}
 }
