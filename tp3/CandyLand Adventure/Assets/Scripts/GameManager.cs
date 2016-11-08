@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void InitGame() {
-		Instantiate (Dungeons [DungeonToPlay]);
+		InitDungeon ();
 		SetCamera ();
 	}
 
@@ -46,6 +46,19 @@ public class GameManager : MonoBehaviour {
 		camera.transform.rotation = InitDungeon.transform.rotation;
 	}
 
+	private void InitDungeon() {
+		DungeonCreator dc = GameObject.Find ("DungeonCreator").GetComponent<DungeonCreator> ();
+		Dungeon d = Dungeons [DungeonToPlay];
+
+		dc.Seed = d.Seed;
+		dc.Name = d.name;
+		dc.Start = d.Start;
+		dc.End = d.End;
+		dc.MatrixSize = d.Size;
+		dc.Difficulty = d.Difficulty;
+
+		dc.Generate();
+	}
 
 
 }
