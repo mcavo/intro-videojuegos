@@ -10,7 +10,7 @@ using System.Linq;
 public class MenuManager : MonoBehaviour {
 
 	public GameObject gameManager;			//GameManager prefab to instantiate.
-	//public GameObject soundManager;			//SoundManager prefab to instantiate.
+	public GameObject soundManager;			//SoundManager prefab to instantiate.
 
 	public Button RulesButton;
 	public Button ControllsButton;
@@ -47,10 +47,10 @@ public class MenuManager : MonoBehaviour {
 			Instantiate (gameManager);
 		}
 		//Check if a SoundManager has already been assigned to static variable SoundManager.instance or if it's still null
-		//if (SoundManager.instance == null) {
-		//Instantiate SoundManager prefab
-		//Instantiate(soundManager);
-		//}
+		if (SoundManager.instance == null) {
+//		Instantiate SoundManager prefab
+			Instantiate(soundManager);
+		}
 
 		FillDungeonList ();
 	}
@@ -76,6 +76,8 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenuButton.onClick.AddListener (DifficultyMenuButtonOnClick);
 
 		DungeonListBackButton.onClick.AddListener (DungeonListBackButtonOnClick);
+
+		SoundManager.instance.playBasicMusic ();
 	}
 	
 	// Update is called once per frame
