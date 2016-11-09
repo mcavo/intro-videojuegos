@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameOverManager : MonoBehaviour {
 
 	public GameObject gameManager;			//GameManager prefab to instantiate.
-	//public GameObject soundManager;			//SoundManager prefab to instantiate.
+	public GameObject soundManager;			//SoundManager prefab to instantiate.
 
 	public Text FeedBack;
 
@@ -26,10 +26,10 @@ public class GameOverManager : MonoBehaviour {
 			Instantiate (gameManager);
 		}
 		//Check if a SoundManager has already been assigned to static variable SoundManager.instance or if it's still null
-		//if (SoundManager.instance == null) {
+		if (SoundManager.instance == null) {
 		//Instantiate SoundManager prefab
-		//Instantiate(soundManager);
-		//}
+			Instantiate(soundManager);
+		}
 		Fill();
 	}
 		
@@ -47,7 +47,7 @@ public class GameOverManager : MonoBehaviour {
 		foreach (var b in PlayAgain) {
 			b.onClick.AddListener (PlayAgainButtonOnClick);
 		}
-		// PlayButton.onClick.AddListener (PlayButtonOnClick);
+		SoundManager.instance.playBasicMusic();
 	}
 
 	void Fill() {

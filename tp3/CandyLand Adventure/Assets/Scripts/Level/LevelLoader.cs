@@ -4,11 +4,10 @@ using System.Collections;
 public class LevelLoader : MonoBehaviour {
 
 	public GameObject gameManager;			//GameManager prefab to instantiate.
-	//public GameObject soundManager;			//SoundManager prefab to instantiate.
+	public GameObject soundManager;			//SoundManager prefab to instantiate.
 
 	public GameObject Pause;
 	private bool paused;
-
 
 	void Awake ()
 	{
@@ -18,10 +17,10 @@ public class LevelLoader : MonoBehaviour {
 			Instantiate (gameManager);
 		}
 		//Check if a SoundManager has already been assigned to static variable SoundManager.instance or if it's still null
-		//if (SoundManager.instance == null) {
+		if (SoundManager.instance == null) {
 		//Instantiate SoundManager prefab
-		//Instantiate(soundManager);
-		//}
+			Instantiate(soundManager);
+		}
 	}
 
 	void Start ()
