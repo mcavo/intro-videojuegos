@@ -31,7 +31,7 @@ public class Dungeon : MonoBehaviour {
 		//Cada trampa son dos segundos menos
 		//Cada bonus son dos segundos mas
 		float extraTime = ((float) ( Size * 12 * TimeToCrossModule ) ) / ( Mathf.Log(Difficulty + 1) / Mathf.Log(2));
-			return 2 * TimeToCrossModule * TotalModules - TimeToCrossModule * SimpleWayModules + (TrapsQuantity - BonusQuantity) + extraTime;
+		return 2 * TimeToCrossModule * TotalModules - TimeToCrossModule * SimpleWayModules + (TrapsQuantity - BonusQuantity) + extraTime;
 	}
 
 	public void AddSimpleWayModule() {
@@ -43,12 +43,12 @@ public class Dungeon : MonoBehaviour {
 		TotalModules += 1;
 	}
 
-	public void AddTrap() {
-		TrapsQuantity += 1;
+	public void AddTraps(int count) {
+		TrapsQuantity += count;
 	}
 
-	public void AddBonus() {
-		BonusQuantity += 1;
+	public void AddBonuses(int count) {
+		BonusQuantity += count;
 	}
 
 }
