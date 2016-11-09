@@ -2,7 +2,6 @@
 using System.Collections;
 
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class DungeonSelector : MonoBehaviour {
 
@@ -24,8 +23,6 @@ public class DungeonSelector : MonoBehaviour {
 
 	void ButtonOnClick() {
 		GameManager.instance.DungeonToPlay = index;
-		GameManager.instance.Difficulty = 1;
-		SceneManager.LoadScene ("Level");
 	}
 
 }

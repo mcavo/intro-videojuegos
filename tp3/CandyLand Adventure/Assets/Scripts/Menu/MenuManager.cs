@@ -2,6 +2,7 @@
 using System.Collections;
 
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,17 @@ public class MenuManager : MonoBehaviour {
 	public Button BonusBackButton;
 	public Button BonusPrincipalButton;
 
+	public GameObject Difficulty;
+	public Button EasyButton;
+	public Button ModerateButton;
+	public Button HardButton;
+	public Button DifficultyBackButton;
+	public Button DifficultyMenuButton;
+
 	public GameObject DungeonList;
 	public GameObject DungeonGrid;
 	public GameObject DungeonSelector;
+	public Button DungeonListBackButton;
 
 	void Awake ()
 	{
@@ -60,6 +69,13 @@ public class MenuManager : MonoBehaviour {
 		BonusBackButton.onClick.AddListener (BonusBackButtonOnClick);
 		BonusPrincipalButton.onClick.AddListener (BonusPrincipalButtonOnClick);
 
+		EasyButton.onClick.AddListener (EasyButtonOnClick);
+		ModerateButton.onClick.AddListener (ModerateButtonOnClick);
+		HardButton.onClick.AddListener (HardButtonOnClick);
+		DifficultyBackButton.onClick.AddListener (DifficultyBackButtonOnClick);
+		DifficultyMenuButton.onClick.AddListener (DifficultyMenuButtonOnClick);
+
+		DungeonListBackButton.onClick.AddListener (DungeonListBackButtonOnClick);
 	}
 	
 	// Update is called once per frame
@@ -74,6 +90,7 @@ public class MenuManager : MonoBehaviour {
 			dungeon.transform.SetParent (DungeonGrid.transform);
 			dungeon.GetComponent<DungeonSelector> ().SetDungeonIndex (i);
 			dungeon.GetComponentInChildren<Text> ().text = GameManager.instance.Dungeons [i].name;
+			dungeon.GetComponent<Button>().onClick.AddListener (DungeonSelectorButtonOnClick);
 		}
 		
 	}
@@ -84,6 +101,7 @@ public class MenuManager : MonoBehaviour {
 		RulesMenu (true);
 		BonusAndTrapsMenu (false);
 		PlayMenu (false);
+		DifficultyMenu (false);
 	}
 
 	void RulesBackButtonOnClick () {
@@ -92,6 +110,7 @@ public class MenuManager : MonoBehaviour {
 		RulesMenu (false);
 		BonusAndTrapsMenu (false);
 		PlayMenu (false);
+		DifficultyMenu (false);
 	}
 
 	void RulesMoreButtonOnClick () {
@@ -100,6 +119,7 @@ public class MenuManager : MonoBehaviour {
 		RulesMenu (false);
 		BonusAndTrapsMenu (true);
 		PlayMenu (false);
+		DifficultyMenu (false);
 	}
 
 	void BonusBackButtonOnClick () {
@@ -116,6 +136,7 @@ public class MenuManager : MonoBehaviour {
 		RulesMenu (false);
 		BonusAndTrapsMenu (false);
 		PlayMenu (true);
+		DifficultyMenu (false);
 	}
 
 	void ControllsButtonOnClick () {
@@ -124,7 +145,50 @@ public class MenuManager : MonoBehaviour {
 		RulesMenu (false);
 		BonusAndTrapsMenu (false);
 		PlayMenu (false);
+		DifficultyMenu (false);
 	}
+
+	void DungeonListBackButtonOnClick() {
+		RulesBackButtonOnClick();
+	}
+
+	void DungeonSelectorButtonOnClick() {
+		PrincipalMenu (false);
+		ControllsMenu (false);
+		RulesMenu (false);
+		BonusAndTrapsMenu (false);
+		PlayMenu (false);
+		DifficultyMenu (true);
+	}
+
+	void EasyButtonOnClick () {
+		GameManager.instance.Difficulty = 1;
+		SceneManager.LoadScene ("Level");
+	}
+
+	void ModerateButtonOnClick () {
+		GameManager.instance.Difficulty = 2;
+		SceneManager.LoadScene ("Level");
+	}
+
+	void HardButtonOnClick () {
+		GameManager.instance.Difficulty = 3;
+		SceneManager.LoadScene ("Level");
+	}
+
+	void DifficultyBackButtonOnClick() {
+		PrincipalMenu (false);
+		ControllsMenu (false);
+		RulesMenu (false);
+		BonusAndTrapsMenu (false);
+		PlayMenu (true);
+		DifficultyMenu (false);
+	}
+
+	void DifficultyMenuButtonOnClick () {
+		RulesBackButtonOnClick();
+	}
+
 
 	void ControllsBackButtonOnClick () {
 		RulesBackButtonOnClick ();
@@ -150,6 +214,10 @@ public class MenuManager : MonoBehaviour {
 
 	void BonusAndTrapsMenu (bool show) {
 		Bonus.SetActive (show);
+	}
+
+	void DifficultyMenu (bool show) {
+		Difficulty.SetActive (show);
 	}
 
 }
