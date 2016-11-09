@@ -24,6 +24,7 @@ public class DungeonSelector : MonoBehaviour {
 
 	void ButtonOnClick() {
 		GameManager.instance.DungeonToPlay = index;
+		GameManager.instance.Difficulty = 1;
 		SceneManager.LoadScene ("Level");
 	}
 

@@ -32,11 +32,19 @@ public class MoveCameraScript : MonoBehaviour {
 		}
 
 		if (Input.GetKey (KeyCode.UpArrow)) {
-			if (! Physics.Raycast (transform.localPosition, transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime)) {
+			if (Physics.Raycast (transform.localPosition, transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime)) {
+				if (hit.collider.tag == "Finish") {
+					GameManager.instance.WinGame ();
+				}
+			} else {
 				transform.localPosition = transform.localPosition + transform.forward * MovementSpeed * Time.deltaTime;
 			}
 		} else if (Input.GetKey (KeyCode.DownArrow)) {
-			if (! Physics.Raycast (transform.localPosition, -1 * transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime)) {
+			if (Physics.Raycast (transform.localPosition, -1 * transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime)) {
+				if (hit.collider.tag == "Finish") {
+					GameManager.instance.WinGame ();
+				}
+			} else {
 				transform.localPosition = transform.localPosition - transform.forward * MovementSpeed * Time.deltaTime;
 			}
 		}

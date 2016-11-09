@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.ImageEffects;
 
 public class GameManager : MonoBehaviour {
 
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour {
 	public Dungeon[] Dungeons;
 	public int DungeonToPlay;
 
+	public int Difficulty;
 	public float Time;
 	public float TimeLeft;
 	public bool Win;
@@ -62,7 +64,7 @@ public class GameManager : MonoBehaviour {
 		dc.Start = d.Start;
 		dc.End = d.End;
 		dc.MatrixSize = d.Size;
-		dc.Difficulty = d.Difficulty;
+		dc.Difficulty = Difficulty;
 		dc.Generate();
 		TimeLeft = 0;
 		Time = d.TimeNeeded();
@@ -79,10 +81,17 @@ public class GameManager : MonoBehaviour {
 		GameObject.Find("Fill").GetComponent<TimeManager> ().enabled = true;
 	}
 
+	private IEnumerator WinRoutine() {
+		GameObject.Find ("Main Camera").GetComponent<Bloom> ().enabled = true;
+		Destroy (GameObject.Find("Cake"));
+		yield return new WaitForSeconds (0.5f);
+		SceneManager.LoadScene ("GameOver");
+	}
+
 	public void WinGame()
 	{
 		Win = true;
-		SceneManager.LoadScene ("GameOver");
+		StartCoroutine (WinRoutine());
 	}
 		
 	public void GameOver()
