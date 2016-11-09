@@ -68,8 +68,8 @@ public class Module : MonoBehaviour
 	{
 		int trapsCount = addTraps (level);
 		int bonusCount = addBonus (level);
-		dungeon.AddBonuses (bonusCount);
-		dungeon.AddTraps (trapsCount);
+//		dungeon.AddBonuses (bonusCount);
+//		dungeon.AddTraps (trapsCount);
 	}
 
 	public Bonus getBonus(int difficulty)

@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour {
 		dc.Generate();
 		TimeLeft = 0;
 		Time = d.TimeNeeded();
+		Debug.Log (Time);
 	}
 
 	private void SetTimer() {
