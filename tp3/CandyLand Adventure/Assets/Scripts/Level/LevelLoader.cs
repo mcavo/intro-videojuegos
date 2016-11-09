@@ -28,6 +28,7 @@ public class LevelLoader : MonoBehaviour {
 		GameManager.instance.InitGame ();
 		paused = false;
 		StartCoroutine (PauseRoutine ());
+		SoundManager.instance.playBasicMusic ();
 	}
 
 	private IEnumerator PauseRoutine() {
