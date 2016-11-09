@@ -36,7 +36,7 @@ public class MoveCameraScript : MonoBehaviour {
 				transform.localPosition = transform.localPosition + transform.forward * MovementSpeed * Time.deltaTime;
 			}
 		} else if (Input.GetKey (KeyCode.DownArrow)) {
-			if (! Physics.Raycast (transform.localPosition, -1 * transform.forward, out hit, MovementSpeed * Time.deltaTime)) {
+			if (! Physics.Raycast (transform.localPosition, -1 * transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime)) {
 				transform.localPosition = transform.localPosition - transform.forward * MovementSpeed * Time.deltaTime;
 			}
 		}
@@ -46,7 +46,19 @@ public class MoveCameraScript : MonoBehaviour {
 		if (col.tag == "Trap") {
 			trapped (col.GetComponent<Trap>());	
 		} else if (col.tag == "Bonus") {
+			giveBonus (col.GetComponent <Bonus> ());
 		}	
+	}
+
+	void giveBonus(Bonus bonus) {
+		StartCoroutine (GiveBonus (bonus));
+	}
+
+	public IEnumerator GiveBonus(Bonus bonus)
+	{
+		MovementSpeed  = MovementSpeed + bonus.incrementSpeed * SpeedMultiplier;
+		yield return new WaitForSeconds (5 * bonus.duration);
+		MovementSpeed = MovementSpeed + bonus.incrementSpeed * SpeedMultiplier;
 	}
 
 	void trapped(Trap trap) {
