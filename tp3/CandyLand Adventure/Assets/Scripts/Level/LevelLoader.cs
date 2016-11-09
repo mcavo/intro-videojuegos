@@ -6,6 +6,8 @@ public class LevelLoader : MonoBehaviour {
 	public GameObject gameManager;			//GameManager prefab to instantiate.
 	//public GameObject soundManager;			//SoundManager prefab to instantiate.
 
+	public GameObject Pause;
+
 
 	void Awake ()
 	{
