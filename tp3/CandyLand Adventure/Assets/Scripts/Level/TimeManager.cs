@@ -19,7 +19,7 @@ public class TimeManager : MonoBehaviour {
 		TimeBar.fillAmount = GameManager.instance.TimeLeft / GameManager.instance.Time;
 
 		if (TimeBar.fillAmount >= 1f) {
-			
+			GameManager.instance.GameOver ();
 		}
 	}
 }

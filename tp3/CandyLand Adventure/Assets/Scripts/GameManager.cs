@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour {
 
 	public float Time;
 	public float TimeLeft;
+	public bool Win;
 
 	void Awake() {
 		//Check if instance already exists
@@ -76,4 +78,15 @@ public class GameManager : MonoBehaviour {
 		GameObject.Find("Fill").GetComponent<TimeManager> ().enabled = true;
 	}
 
+	public void WinGame()
+	{
+		Win = true;
+		SceneManager.LoadScene ("GameOver");
+	}
+		
+	public void GameOver()
+	{
+		Win = false;
+		SceneManager.LoadScene ("GameOver");
+	}
 }
