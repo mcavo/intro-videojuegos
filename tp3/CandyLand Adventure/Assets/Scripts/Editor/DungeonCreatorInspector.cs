@@ -22,12 +22,16 @@ public class DungeonCreatorInspector : Editor {
 		//DungeonCreator myTarget = (DungeonCreator)target;
 
 		//myTarget.seed = EditorGUILayout.IntField("Seed", myTarget.seed);
-
-		EditorGUILayout.HelpBox ("In order to play your dungeon, put the Dungeon prefab at the Assets/Prefabs/Dungeon folder.\nAnd later, add that prefab to the Dungeon list at the GameManager prefab, located at the Assets/Prefabs folder.",MessageType.Info);
+		EditorGUILayout.HelpBox ("Create and delete Dungeons until get a satisfying combination.\nIn order to play that dungeon, press the Clear button, put the Dungeon prefab at the Assets/Prefabs/Dungeon folder.\nAnd later, add that prefab to the Dungeon list at the GameManager prefab, located at the Assets/Prefabs folder.",MessageType.Info);
 
 		if (GUILayout.Button("Create"))
 		{
 			GameObject.Find("DungeonCreator").GetComponent<DungeonCreator>().Generate();
+		}
+
+		if (GUILayout.Button("Delete"))
+		{
+			GameObject.Find("DungeonCreator").GetComponent<DungeonCreator>().Delete();
 		}
 
 		if (GUILayout.Button("Clear"))

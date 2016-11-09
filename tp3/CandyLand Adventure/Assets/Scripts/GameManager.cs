@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
@@ -7,6 +8,9 @@ public class GameManager : MonoBehaviour {
 
 	public Dungeon[] Dungeons;
 	public int DungeonToPlay;
+
+	public float Time;
+	public float TimeLeft;
 
 	void Awake() {
 		//Check if instance already exists
@@ -35,8 +39,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void InitGame() {
-		Instantiate (Dungeons [DungeonToPlay]);
+		InitDungeon ();
 		SetCamera ();
+		SetTimer ();
 	}
 
 	private void SetCamera() {
@@ -46,6 +51,29 @@ public class GameManager : MonoBehaviour {
 		camera.transform.rotation = InitDungeon.transform.rotation;
 	}
 
+	private void InitDungeon() {
+		DungeonCreator dc = GameObject.Find ("DungeonCreator").GetComponent<DungeonCreator> ();
+		Dungeon d = Dungeons [DungeonToPlay];
 
+		dc.Seed = d.Seed;
+		dc.Name = d.name;
+		dc.Start = d.Start;
+		dc.End = d.End;
+		dc.MatrixSize = d.Size;
+		dc.Difficulty = d.Difficulty;
+		dc.Generate();
+		TimeLeft = 0;
+		Time = d.TimeNeeded();
+	}
+
+	private void SetTimer() {
+		StartCoroutine (StartRoutine ());
+	}
+
+	private IEnumerator StartRoutine() {
+		//TODO: Should show a 3..2..1..Ready!
+		yield return new WaitForSeconds (1.0f);
+		GameObject.Find("Fill").GetComponent<TimeManager> ().enabled = true;
+	}
 
 }

@@ -6,42 +6,54 @@ using System.Linq;
 
 [ExecuteInEditMode]
 public class DungeonCreator : MonoBehaviour {
-	
+
+	public GameObject DungeonGO;
 	public Module startModule;
 	public Module endModule;
 	public Module[] Modules;
 	public Module Wall;
-	public int MatrixSize = 4;
+	public Bonus[] bonuses;
+	public Trap[] traps;
+
+	public string Name;
 
 	public int Seed;
-	public Vector2 start;
-	public Vector2 end;
+	public int MatrixSize = 4;
+	public Vector2 Start;
+	public Vector2 End;
+
+	public int Difficulty;
+
+
 	private float delta = 2f;
-	public float deltaDistance = 40;
-	private Dungeon DungeonScript;
 
-	private Transform Dungeon;
+	private GameObject Dungeon;
 
-	public void Clear()
+	public void Clear ()
 	{
-		var modulesToClear = new List<Module>(GameObject.Find ("Dungeon").GetComponentsInChildren<Module>());
+		var modulesToClear = new List<Module>(Dungeon.GetComponentsInChildren<Module>());
 		foreach (var m in modulesToClear) {
 			DestroyImmediate(m.gameObject);
 		}
 	}
 
+	public void Delete ()
+	{
+		DestroyImmediate(Dungeon);
+	}
+
 	private Vector2 GetMatrixPosition (Vector3 position)
 	{
-		return new Vector2 (Mathf.FloorToInt((position.x + 42.5f) / 40) + start.x, Mathf.FloorToInt((position.z - 2f) / 40) + start.y);
+		return new Vector2 (Mathf.FloorToInt((position.x + 42.5f) / 40) + Start.x, Mathf.FloorToInt((position.z - 2f) / 40) + Start.y);
 	}
 
 	private Vector2 getNewDirection(Vector2 current) {
-		if (current == end) {
+		if (current == End) {
 			return new Vector2(0,0);
 		}
 		var posibleDirections = new List<Vector2> ();
-		int difX = (int) (end.x - current.x);
-		int difY = (int) (end.y - current.y);
+		int difX = (int) (End.x - current.x);
+		int difY = (int) (End.y - current.y);
 		if (difX != 0) {
 			posibleDirections.Add (new Vector2 (difX/Mathf.Abs(difX), 0));
 		}
@@ -49,6 +61,56 @@ public class DungeonCreator : MonoBehaviour {
 			posibleDirections.Add (new Vector2 (0, difY/Mathf.Abs(difY)));
 		}
 		return posibleDirections [Random.Range (0, posibleDirections.Count)];
+	}
+
+	public void Decorate(Module m, int level) 
+	{
+		addBonus (m, level);
+		addTraps (m, level);
+	}
+
+	public Bonus getBonus(int difficulty)
+	{
+		var bonusPrefab = bonuses[Random.Range(0, bonuses.Length)];
+		Bonus bonus = (Bonus)Instantiate (bonusPrefab);
+		Dungeon.GetComponent<Dungeon> ().AddBonus ();
+		return bonus;
+	}
+
+	public Trap getTrap(int difficulty)
+	{
+		var trapPrefab = traps[Random.Range(0, traps.Length)];
+		Trap trap = (Trap)Instantiate (trapPrefab);
+		Dungeon.GetComponent<Dungeon> ().AddTrap ();
+		return trap;
+	}
+
+	public void addBonus(Module m, int difficulty)
+	{
+		BonusAnchor[] bonusAnchors = m.GetBonusAnchors (difficulty);
+		foreach (BonusAnchor bonusAnchor in bonusAnchors) 
+		{
+			// TODO: condition should be change with level var.
+			if (Random.Range (0, 1) == 0) {
+				Bonus bonus = getBonus (difficulty);
+				bonus.transform.position = bonusAnchor.transform.position;
+				bonus.transform.parent = m.gameObject.transform;	
+			}
+		}
+	}
+
+	public void addTraps(Module m, int difficulty)
+	{
+		TrapAnchor[] trapAnchors = m.GetTrapAnchors (difficulty);
+		foreach (TrapAnchor trapAnchor in trapAnchors) 
+		{
+			// TODO: condition should be change with level var.
+			if (Random.Range (0, 1) == 0) {
+				Trap trap = getTrap (difficulty);
+				trap.transform.position = trapAnchor.transform.position;
+				trap.transform.parent = m.gameObject.transform;	
+			}
+		}
 	}
 
 	private ModuleConnector getNewExitPoint (ModuleConnector oldExit, Vector2 newDirection, List<ModuleConnector> pendingExits, int[,] matrix) {
@@ -60,8 +122,8 @@ public class DungeonCreator : MonoBehaviour {
 		ShuffleList(PosiblePrefabs);
 		for (int i = 0; i < PosiblePrefabs.Count; i++) {
 			var newModule = (Module)Instantiate (PosiblePrefabs [i]);
-			newModule.Decorate(1);
-			newModule.transform.SetParent (Dungeon);
+			Decorate(newModule, Difficulty);
+			newModule.transform.SetParent (Dungeon.transform);
 
 			var newModuleExits = newModule.GetExits ();
 
@@ -79,7 +141,7 @@ public class DungeonCreator : MonoBehaviour {
 						Vector2 position = GetMatrixPosition (n);
 
 						matrix [(int)position.x, (int)position.y] = 1;
-						DungeonScript.AddSimpleWayModule ();
+						Dungeon.GetComponent<Dungeon>().AddSimpleWayModule ();
 						return e;
 					}
 				}
@@ -95,18 +157,19 @@ public class DungeonCreator : MonoBehaviour {
 	{
 		Random.InitState (Seed);
 
-		Dungeon = GameObject.Find ("Dungeon").GetComponent<Transform>();
-		DungeonScript = Dungeon.GetComponent<Dungeon> ();
-		DungeonScript.Initialize (MatrixSize);
+		Dungeon = Instantiate(DungeonGO) as GameObject;
+		Dungeon.name = Name;
+		Dungeon dungeonScript = Dungeon.GetComponent<Dungeon> ();
+		dungeonScript.Initialize (Seed, MatrixSize, Start, End, Difficulty);
 		var startsModule = (Module) Instantiate(startModule, transform.position, transform.rotation);
-		DungeonScript.AddSimpleWayModule ();
-		startsModule.transform.SetParent (Dungeon);
+		Dungeon.GetComponent<Dungeon>().AddSimpleWayModule ();
+		startsModule.transform.SetParent (Dungeon.transform);
 		var pendingExits = new List<ModuleConnector>(startsModule.GetExits());
 		var matrix = new int[MatrixSize, MatrixSize];
 		var endWay = false;
-		matrix [(int)start.x, (int)start.y] = 1;
+		matrix [(int)Start.x, (int)Start.y] = 1;
 
-		var current = start;
+		var current = Start;
 		var newD = getNewDirection (current);
 		ModuleConnector exitP = pendingExits [0];
 		foreach (var e in pendingExits) {
@@ -120,12 +183,12 @@ public class DungeonCreator : MonoBehaviour {
 			pendingExits.Remove (exitP);
 			current = current + newD;
 			newD = getNewDirection (current);
-			if (current == end)
+			if (current == End)
 			{  
 				var newModule = (Module)Instantiate (endModule);
-				DungeonScript.AddSimpleWayModule ();
-				newModule.Decorate (1);
-				newModule.transform.SetParent (Dungeon);
+				Dungeon.GetComponent<Dungeon>().AddSimpleWayModule ();
+				Decorate (newModule, Difficulty);
+				newModule.transform.SetParent (Dungeon.transform);
 				var newModuleExits = newModule.GetExits ();
 				var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
 				MatchExits (exitP, exitToMatch);
@@ -176,9 +239,9 @@ public class DungeonCreator : MonoBehaviour {
 						var newModulePrefab = GetRandomWithTag (Modules, newTag);
 
 						var newModule = (Module)Instantiate (newModulePrefab);
-						DungeonScript.AddModule();
-						newModule.Decorate(1);
-						newModule.transform.SetParent (Dungeon);
+						Dungeon.GetComponent<Dungeon>().AddModule();
+						Decorate(newModule, Difficulty);
+						newModule.transform.SetParent (Dungeon.transform);
 
 						var newModuleExits = newModule.GetExits ();
 						var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
@@ -215,8 +278,8 @@ public class DungeonCreator : MonoBehaviour {
 							}
 							if (!foundDuplicated) {
 								var newModule = (Module)Instantiate (Wall);
-								newModule.Decorate(1);
-								newModule.transform.SetParent (Dungeon);
+								Decorate(newModule, Difficulty);
+								newModule.transform.SetParent (Dungeon.transform);
 								var newModuleExits = newModule.GetExits ();
 								var exitToMatch = newModuleExits.FirstOrDefault (x => x.IsDefault) ?? GetRandom (newModuleExits);
 								MatchExits (pendingExit, exitToMatch);

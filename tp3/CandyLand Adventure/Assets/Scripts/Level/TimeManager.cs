@@ -4,24 +4,22 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour {
 
-	public Image TimeBar;
-	public float TimeLeft;
+	Image TimeBar;
 
 	Dungeon dungeon;
 
 	// Use this for initialization
 	void Start () {
-		dungeon = GameObject.Find ("Dungeon").GetComponent<Dungeon> ();
-		TimeLeft = dungeon.TimeNeeded(1);
+		TimeBar = gameObject.GetComponent<Image> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		TimeBar.fillAmount += (1/TimeLeft) * Time.deltaTime;
+		GameManager.instance.TimeLeft += Time.deltaTime;
+		TimeBar.fillAmount = GameManager.instance.TimeLeft / GameManager.instance.Time;
 
 		if (TimeBar.fillAmount >= 1f) {
 			
 		}
-
 	}
 }
