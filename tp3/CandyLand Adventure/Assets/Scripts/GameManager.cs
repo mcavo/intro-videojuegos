@@ -68,7 +68,6 @@ public class GameManager : MonoBehaviour {
 		dc.Generate();
 		TimeLeft = 0;
 		Time = d.TimeNeeded();
-		Debug.Log (Time);
 	}
 
 	private void SetTimer() {
@@ -76,7 +75,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator StartRoutine() {
-		//TODO: Should show a 3..2..1..Ready!
 		yield return new WaitForSeconds (1.0f);
 		GameObject.Find("Fill").GetComponent<TimeManager> ().enabled = true;
 	}
