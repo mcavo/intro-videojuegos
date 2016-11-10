@@ -65,8 +65,10 @@ public class MoveCameraScript : MonoBehaviour {
 	public IEnumerator GiveBonus(Bonus bonus)
 	{
 		MovementSpeed  = MovementSpeed + bonus.incrementSpeed * SpeedMultiplier;
+		RotationSpeed = RotationSpeed + (bonus.incrementSpeed * SpeedMultiplier) * 5;
 		yield return new WaitForSeconds (5 * bonus.duration);
-		MovementSpeed = MovementSpeed + bonus.incrementSpeed * SpeedMultiplier;
+		MovementSpeed = MovementSpeed - bonus.incrementSpeed * SpeedMultiplier;
+		RotationSpeed = RotationSpeed - (bonus.incrementSpeed * SpeedMultiplier) * 5;
 	}
 
 	void trapped(Trap trap) {
@@ -79,6 +81,7 @@ public class MoveCameraScript : MonoBehaviour {
 		TrapsApplyCount++;
 		blurEffect.enabled = true;
 		MovementSpeed  = MovementSpeed - trap.reduceSpeed * SpeedMultiplier;
+		RotationSpeed = RotationSpeed - (trap.reduceSpeed * SpeedMultiplier) * 5;
 		yield return new WaitForSeconds (5 * trap.duration);
 
 		TrapsApplyCount--;
@@ -87,6 +90,7 @@ public class MoveCameraScript : MonoBehaviour {
 			blurEffect.enabled = false;
 		}
 		MovementSpeed = MovementSpeed + trap.reduceSpeed * SpeedMultiplier;
+		RotationSpeed = RotationSpeed + (trap.reduceSpeed * SpeedMultiplier) * 5;
 	}
 		
 	public IEnumerator MakeItShake(Trap trap)

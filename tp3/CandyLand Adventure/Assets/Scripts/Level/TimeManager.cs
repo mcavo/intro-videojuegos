@@ -8,6 +8,8 @@ public class TimeManager : MonoBehaviour {
 
 	Dungeon dungeon;
 
+	private Color color;
+
 	// Use this for initialization
 	void Start () {
 		TimeBar = gameObject.GetComponent<Image> ();
@@ -15,10 +17,16 @@ public class TimeManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GameManager.instance.TimeLeft += Time.deltaTime;
-		TimeBar.fillAmount = GameManager.instance.TimeLeft / GameManager.instance.Time;
 
-		if (TimeBar.fillAmount >= 1f) {
+		color = TimeBar.color;
+
+		GameManager.instance.TimeLeft += Time.deltaTime;
+
+		color.r = GameManager.instance.TimeLeft / GameManager.instance.Time;
+		TimeBar.fillAmount = 1f - GameManager.instance.TimeLeft / GameManager.instance.Time;
+		TimeBar.color = color;
+
+		if (TimeBar.fillAmount <= 0f) {
 			GameManager.instance.GameOver ();
 		}
 	}

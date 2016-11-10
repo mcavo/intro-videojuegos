@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
 	public float Time;
 	public float TimeLeft;
 	public bool Win;
+	public AudioClip endLevel;
 
 	void Awake() {
 		//Check if instance already exists
@@ -68,7 +69,6 @@ public class GameManager : MonoBehaviour {
 		dc.Generate();
 		TimeLeft = 0;
 		Time = d.TimeNeeded();
-		Debug.Log (Time);
 	}
 
 	private void SetTimer() {
@@ -76,15 +76,15 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator StartRoutine() {
-		//TODO: Should show a 3..2..1..Ready!
 		yield return new WaitForSeconds (1.0f);
 		GameObject.Find("Fill").GetComponent<TimeManager> ().enabled = true;
 	}
 
 	private IEnumerator WinRoutine() {
+		SoundManager.instance.PlaySingle (endLevel);
 		GameObject.Find ("Main Camera").GetComponent<Bloom> ().enabled = true;
 		Destroy (GameObject.Find("Cake"));
-		yield return new WaitForSeconds (0.5f);
+		yield return new WaitForSeconds (1f);
 		SceneManager.LoadScene ("GameOver");
 	}
 
