@@ -30,7 +30,8 @@ public class DungeonCreator : MonoBehaviour {
 	public void Clear ()
 	{
 		var modulesToClear = new List<Module>(Dungeon.GetComponentsInChildren<Module>());
-		foreach (var m in modulesToClear) {
+		foreach (var m in modulesToClear)
+		{
 			DestroyImmediate(m.gameObject);
 		}
 	}
@@ -45,31 +46,37 @@ public class DungeonCreator : MonoBehaviour {
 		return new Vector2 (Mathf.FloorToInt((position.x + 42.5f) / 40) + Start.x, Mathf.FloorToInt((position.z - 2f) / 40) + Start.y);
 	}
 
-	private Vector2 getNewDirection(Vector2 current) {
-		if (current == End) {
+	private Vector2 getNewDirection(Vector2 current)
+	{
+		if (current == End)
+		{
 			return new Vector2(0,0);
 		}
 		var posibleDirections = new List<Vector2> ();
 		int difX = (int) (End.x - current.x);
 		int difY = (int) (End.y - current.y);
-		if (difX != 0) {
+		if (difX != 0)
+		{
 			posibleDirections.Add (new Vector2 (difX/Mathf.Abs(difX), 0));
 		}
-		if (difY != 0) {
+		if (difY != 0)
+		{
 			posibleDirections.Add (new Vector2 (0, difY/Mathf.Abs(difY)));
 		}
 		return posibleDirections [Random.Range (0, posibleDirections.Count)];
 	}
 
-	private ModuleConnector getNewExitPoint (ModuleConnector oldExit, Vector2 newDirection, List<ModuleConnector> pendingExits, int[,] matrix) {
+	private ModuleConnector getNewExitPoint (ModuleConnector oldExit, Vector2 newDirection, List<ModuleConnector> pendingExits, int[,] matrix)
+	{
 		Dungeon dungeonScript = Dungeon.GetComponent<Dungeon> ();
 		var PosiblePrefabs = new List<Module> ();
-		foreach(var t in oldExit.Tags) {
+		foreach(var t in oldExit.Tags)
+		{
 			PosiblePrefabs.AddRange(Modules.Where(m => m.Tags.Contains(t)).ToArray());
 		}
-		//despues de esto tengo todos los prefabs que podrian ser
 		ShuffleList(PosiblePrefabs);
-		for (int i = 0; i < PosiblePrefabs.Count; i++) {
+		for (int i = 0; i < PosiblePrefabs.Count; i++)
+		{
 			var newModule = (Module)Instantiate (PosiblePrefabs [i]);
 			newModule.Decorate(Difficulty, dungeonScript);
 			newModule.transform.SetParent (Dungeon.transform);
@@ -78,12 +85,15 @@ public class DungeonCreator : MonoBehaviour {
 
 			ShuffleArray (newModuleExits);
 
-			for (int k = 0; k < newModuleExits.Length; k++) {
+			for (int k = 0; k < newModuleExits.Length; k++)
+			{
 				var exitToMatch = newModuleExits [k];
 				var posibleExits = newModuleExits.Where (e => e != exitToMatch);
 				MatchExits (oldExit, exitToMatch);
-				foreach (var e in posibleExits) {
-					if (System.Math.Round (e.transform.forward.x, 0) == newDirection.x && System.Math.Round (e.transform.forward.z, 0) == newDirection.y) {
+				foreach (var e in posibleExits)
+				{
+					if (System.Math.Round (e.transform.forward.x, 0) == newDirection.x && System.Math.Round (e.transform.forward.z, 0) == newDirection.y)
+					{
 						pendingExits.AddRange (newModuleExits.Where (ep => ep != exitToMatch));
 
 						var n = oldExit.transform.position + oldExit.transform.forward * delta;
@@ -125,14 +135,17 @@ public class DungeonCreator : MonoBehaviour {
 		var current = Start;
 		var newD = getNewDirection (current);
 		ModuleConnector exitP = pendingExits [0];
-		foreach (var e in pendingExits) {
+		foreach (var e in pendingExits)
+		{
 			if (System.Math.Round(e.transform.forward.x, 0) == newD.x
-					&& System.Math.Round(e.transform.forward.z, 0) == newD.y) {
+				&& System.Math.Round(e.transform.forward.z, 0) == newD.y)
+			{
 				exitP = e;
 			}
 		}
 
-		while (!endWay) {
+		while (!endWay)
+		{
 			pendingExits.Remove (exitP);
 			current = current + newD;
 			newD = getNewDirection (current);
@@ -155,7 +168,8 @@ public class DungeonCreator : MonoBehaviour {
 			{
 				var newExitP = getNewExitPoint (exitP, newD, pendingExits, matrix);
 
-				if (exitP == newExitP) {
+				if (exitP == newExitP)
+				{
 					break;
 				}
 
@@ -171,23 +185,27 @@ public class DungeonCreator : MonoBehaviour {
 			var duplicatedExits = new List<ModuleConnector>();
 			var count = 0;
 
-			for (int i=0 ; i<pendingExits.Count ; i++) {
+			for (int i=0 ; i<pendingExits.Count ; i++)
+			{
 				
 				var pendingExit = pendingExits[i];
 				var foundDuplicated = false;
 
 
-				foreach (var p in duplicatedExits) {
-					if (checkEqualPoints(p.transform.position, pendingExit.transform.position)) {
+				foreach (var p in duplicatedExits)
+				{
+					if (checkEqualPoints(p.transform.position, pendingExit.transform.position))
+					{
 						foundDuplicated = true;
 						count = count + 1;
 						break;
 					}
 				}
 
-				if (!foundDuplicated) {
-					if (CheckForChunck (matrix, pendingExit)) {
-						
+				if (!foundDuplicated)
+				{
+					if (CheckForChunck (matrix, pendingExit))
+					{
 						var newTag = GetRandom (pendingExit.Tags);
 						var newModulePrefab = GetRandomWithTag (Modules, newTag);
 
@@ -206,30 +224,36 @@ public class DungeonCreator : MonoBehaviour {
 						Vector2 position = GetMatrixPosition (n);
 
 						matrix [(int)position.x, (int)position.y] = 1;
-
-					} else {
-						
+					} 
+					else
+					{
 						ModuleConnector checkDuplicated;
 						foundDuplicated = false;
-						for(int j = i+1 ; j < pendingExits.Count ; j ++) {
+						for(int j = i+1 ; j < pendingExits.Count ; j ++)
+						{
 							checkDuplicated = pendingExits[j];
-							if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position)) {
+							if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position))
+							{
 								duplicatedExits.Add(pendingExit);
 								foundDuplicated = true;
 								break;
 							}
 						}
-						if (!foundDuplicated) {
-							for (int j = 0 ; j < newExits.Count ; j ++){
+						if (!foundDuplicated)
+						{
+							for (int j = 0 ; j < newExits.Count ; j ++)
+							{
 								checkDuplicated = newExits[j];
-								if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position)) {
+								if(checkEqualPoints(pendingExit.transform.position, checkDuplicated.transform.position))
+								{
 									duplicatedExits.Add(pendingExit);
 									foundDuplicated = true;
 									newExits.Add(pendingExit);
 									break;
 								}
 							}
-							if (!foundDuplicated) {
+							if (!foundDuplicated)
+							{
 								var newModule = (Module)Instantiate (Wall);
 								newModule.Decorate(Difficulty, dungeonScript);
 								newModule.transform.SetParent (Dungeon.transform);
@@ -243,12 +267,12 @@ public class DungeonCreator : MonoBehaviour {
 			}
 			pendingExits = newExits;
 
-
 		} while (pendingExits.Count != 0);
 
 	}
 
-	private bool checkEqualPoints(Vector3 p1, Vector3 p2) {
+	private bool checkEqualPoints(Vector3 p1, Vector3 p2)
+	{
 		return Mathf.Approximately (p1.x, p2.x) && Mathf.Approximately (p1.z, p2.z);
 	}
 

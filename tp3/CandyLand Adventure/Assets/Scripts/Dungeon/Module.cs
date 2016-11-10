@@ -32,8 +32,8 @@ public class Module : MonoBehaviour
 		BonusAnchor[] bonusAnchors = GetBonusAnchors (difficulty);
 		foreach (BonusAnchor bonusAnchor in bonusAnchors) 
 		{
-			// TODO: condition should be change with level var.
-			if (Random.Range (0, 1) == 0) {
+			if (Random.Range (0, 1) == 0)
+			{
 				Bonus bonus = getBonus (difficulty);
 				bonus.transform.position = bonusAnchor.transform.position;
 				bonus.transform.parent = gameObject.transform;	
@@ -53,8 +53,8 @@ public class Module : MonoBehaviour
 		}
 		foreach (TrapAnchor trapAnchor in trapAnchors) 
 		{
-			// TODO: condition should be change with level var.
-			if (Random.Range (0, 1) == 0) {
+			if (Random.Range (0, 1) == 0)
+			{
 				Trap trap = getTrap (difficulty);
 				trap.transform.position = trapAnchor.transform.position;
 				trap.transform.parent = gameObject.transform;	
@@ -66,10 +66,8 @@ public class Module : MonoBehaviour
 
 	public void Decorate(int level, Dungeon dungeon) 
 	{
-		int trapsCount = addTraps (level);
-		int bonusCount = addBonus (level);
-//		dungeon.AddBonuses (bonusCount);
-//		dungeon.AddTraps (trapsCount);
+		addTraps (level);
+		addBonus (level);
 	}
 
 	public Bonus getBonus(int difficulty)

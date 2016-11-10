@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 
-public class MenuManager : MonoBehaviour {
+public class MenuManager : MonoBehaviour
+{
 
 	public GameObject gameManager;			//GameManager prefab to instantiate.
 	public GameObject soundManager;			//SoundManager prefab to instantiate.
@@ -42,12 +43,14 @@ public class MenuManager : MonoBehaviour {
 	void Awake ()
 	{
 		//Check if a GameManager has already been assigned to static variable GameManager.instance or if it's still null
-		if (GameManager.instance == null) {
+		if (GameManager.instance == null)
+		{
 			//Instantiate gameManager prefab
 			Instantiate (gameManager);
 		}
 		//Check if a SoundManager has already been assigned to static variable SoundManager.instance or if it's still null
-		if (SoundManager.instance == null) {
+		if (SoundManager.instance == null)
+		{
 //		Instantiate SoundManager prefab
 			Instantiate(soundManager);
 		}
@@ -56,7 +59,8 @@ public class MenuManager : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		PlayButton.onClick.AddListener (PlayButtonOnClick);
 		ControllsButton.onClick.AddListener (ControllsButtonOnClick);
 		RulesButton.onClick.AddListener (RulesButtonOnClick);
@@ -79,15 +83,12 @@ public class MenuManager : MonoBehaviour {
 
 		SoundManager.instance.playBasicMusic ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-	public void FillDungeonList () {
+	public void FillDungeonList ()
+	{
 
-		for (int i = 0 ; i < GameManager.instance.Dungeons.Length ; i++) {
+		for (int i = 0 ; i < GameManager.instance.Dungeons.Length ; i++)
+		{
 			var dungeon = Instantiate (DungeonSelector) as GameObject;
 			dungeon.transform.SetParent (DungeonGrid.transform);
 			dungeon.GetComponent<DungeonSelector> ().SetDungeonIndex (i);
@@ -97,7 +98,8 @@ public class MenuManager : MonoBehaviour {
 		
 	}
 
-	void RulesButtonOnClick() {
+	void RulesButtonOnClick()
+	{
 		PrincipalMenu (false);
 		ControllsMenu (false);
 		RulesMenu (true);
@@ -106,7 +108,8 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenu (false);
 	}
 
-	void RulesBackButtonOnClick () {
+	void RulesBackButtonOnClick ()
+	{
 		PrincipalMenu (true);
 		ControllsMenu (false);
 		RulesMenu (false);
@@ -115,7 +118,8 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenu (false);
 	}
 
-	void RulesMoreButtonOnClick () {
+	void RulesMoreButtonOnClick () 
+	{
 		PrincipalMenu (false);
 		ControllsMenu (false);
 		RulesMenu (false);
@@ -124,15 +128,18 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenu (false);
 	}
 
-	void BonusBackButtonOnClick () {
+	void BonusBackButtonOnClick () 
+	{
 		RulesButtonOnClick ();
 	}
 
-	void BonusPrincipalButtonOnClick () {
+	void BonusPrincipalButtonOnClick () 
+	{
 		RulesBackButtonOnClick();
 	}
 
-	void PlayButtonOnClick () {
+	void PlayButtonOnClick () 
+	{
 		PrincipalMenu (false);
 		ControllsMenu (false);
 		RulesMenu (false);
@@ -141,7 +148,8 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenu (false);
 	}
 
-	void ControllsButtonOnClick () {
+	void ControllsButtonOnClick () 
+	{
 		PrincipalMenu (false);
 		ControllsMenu (true);
 		RulesMenu (false);
@@ -150,11 +158,13 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenu (false);
 	}
 
-	void DungeonListBackButtonOnClick() {
+	void DungeonListBackButtonOnClick() 
+	{
 		RulesBackButtonOnClick();
 	}
 
-	void DungeonSelectorButtonOnClick() {
+	void DungeonSelectorButtonOnClick() 
+	{
 		PrincipalMenu (false);
 		ControllsMenu (false);
 		RulesMenu (false);
@@ -163,22 +173,26 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenu (true);
 	}
 
-	void EasyButtonOnClick () {
+	void EasyButtonOnClick () 
+	{
 		GameManager.instance.Difficulty = 1;
 		SceneManager.LoadScene ("Level");
 	}
 
-	void ModerateButtonOnClick () {
+	void ModerateButtonOnClick () 
+	{
 		GameManager.instance.Difficulty = 2;
 		SceneManager.LoadScene ("Level");
 	}
 
-	void HardButtonOnClick () {
+	void HardButtonOnClick () 
+	{
 		GameManager.instance.Difficulty = 3;
 		SceneManager.LoadScene ("Level");
 	}
 
-	void DifficultyBackButtonOnClick() {
+	void DifficultyBackButtonOnClick() 
+	{
 		PrincipalMenu (false);
 		ControllsMenu (false);
 		RulesMenu (false);
@@ -187,38 +201,46 @@ public class MenuManager : MonoBehaviour {
 		DifficultyMenu (false);
 	}
 
-	void DifficultyMenuButtonOnClick () {
+	void DifficultyMenuButtonOnClick () 
+	{
 		RulesBackButtonOnClick();
 	}
 
 
-	void ControllsBackButtonOnClick () {
+	void ControllsBackButtonOnClick () 
+	{
 		RulesBackButtonOnClick ();
 	}
 
-	void PrincipalMenu (bool show) {
+	void PrincipalMenu (bool show) 
+	{
 		RulesButton.gameObject.SetActive(show);
 		ControllsButton.gameObject.SetActive(show);
 		PlayButton.gameObject.SetActive(show);
 	}
 
-	void ControllsMenu (bool show) {
+	void ControllsMenu (bool show) 
+	{
 		Controlls.SetActive(show);
 	}
 
-	void PlayMenu (bool show) {
+	void PlayMenu (bool show) 
+	{
 		DungeonList.SetActive (show);
 	}
 
-	void RulesMenu (bool show) {
+	void RulesMenu (bool show) 
+	{
 		Rules.SetActive (show);
 	}
 
-	void BonusAndTrapsMenu (bool show) {
+	void BonusAndTrapsMenu (bool show) 
+	{
 		Bonus.SetActive (show);
 	}
 
-	void DifficultyMenu (bool show) {
+	void DifficultyMenu (bool show) 
+	{
 		Difficulty.SetActive (show);
 	}
 

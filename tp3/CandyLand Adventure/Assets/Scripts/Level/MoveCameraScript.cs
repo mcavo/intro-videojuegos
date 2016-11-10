@@ -2,8 +2,8 @@
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
 
-public class MoveCameraScript : MonoBehaviour {
-
+public class MoveCameraScript : MonoBehaviour
+{
 	private Vector3 RotationVector = new Vector3(0,1f,0);
 	public float RotationSpeed = 50f;
 	public float MovementSpeed = 10f;
@@ -25,40 +25,53 @@ public class MoveCameraScript : MonoBehaviour {
 	{
 		RaycastHit hit;
 
-		if (Input.GetKey (KeyCode.RightArrow)) {
+		if (Input.GetKey (KeyCode.RightArrow))
+		{
 			transform.localEulerAngles += RotationVector * RotationSpeed * Time.deltaTime;
 		} else if (Input.GetKey (KeyCode.LeftArrow)) {
 			transform.localEulerAngles -= RotationVector * RotationSpeed * Time.deltaTime;
 		}
 
-		if (Input.GetKey (KeyCode.UpArrow)) {
-			if (Physics.Raycast (transform.localPosition, transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime)) {
-				if (hit.collider.tag == "Finish") {
+		if (Input.GetKey (KeyCode.UpArrow))
+		{
+			if (Physics.Raycast (transform.localPosition, transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime))
+			{
+				if (hit.collider.tag == "Finish")
+				{
 					GameManager.instance.WinGame ();
 				}
-			} else {
+			} else
+			{
 				transform.localPosition = transform.localPosition + transform.forward * MovementSpeed * Time.deltaTime;
 			}
-		} else if (Input.GetKey (KeyCode.DownArrow)) {
-			if (Physics.Raycast (transform.localPosition, -1 * transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime)) {
-				if (hit.collider.tag == "Finish") {
+		} else if (Input.GetKey (KeyCode.DownArrow))
+		{
+			if (Physics.Raycast (transform.localPosition, -1 * transform.forward, out hit, 4 * MovementSpeed * Time.deltaTime))
+			{
+				if (hit.collider.tag == "Finish")
+				{
 					GameManager.instance.WinGame ();
 				}
-			} else {
+			} else
+			{
 				transform.localPosition = transform.localPosition - transform.forward * MovementSpeed * Time.deltaTime;
 			}
 		}
 	}
 
-	void OnTriggerEnter(Collider col) {
-		if (col.tag == "Trap") {
+	void OnTriggerEnter(Collider col)
+	{
+		if (col.tag == "Trap")
+		{
 			trapped (col.GetComponent<Trap>());	
-		} else if (col.tag == "Bonus") {
+		} else if (col.tag == "Bonus")
+		{
 			giveBonus (col.GetComponent <Bonus> ());
 		}	
 	}
 
-	void giveBonus(Bonus bonus) {
+	void giveBonus(Bonus bonus)
+	{
 		StartCoroutine (GiveBonus (bonus));
 	}
 
@@ -71,7 +84,8 @@ public class MoveCameraScript : MonoBehaviour {
 		RotationSpeed = RotationSpeed - (bonus.incrementSpeed * SpeedMultiplier) * 5;
 	}
 
-	void trapped(Trap trap) {
+	void trapped(Trap trap)
+	{
 		StartCoroutine (MakeItBlur (trap));
 		StartCoroutine (MakeItShake (trap));
 	}

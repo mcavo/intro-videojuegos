@@ -17,7 +17,8 @@ public class Dungeon : MonoBehaviour {
 
 	private float TimeToCrossModule = 5f;
 
-	public void Initialize (int seed, int size, Vector2 start, Vector2 end, int difficulty) {
+	public void Initialize (int seed, int size, Vector2 start, Vector2 end, int difficulty)
+	{
 		Seed = seed;
 		Size = size;
 		Start = start;
@@ -27,17 +28,20 @@ public class Dungeon : MonoBehaviour {
 		TotalModules = 0;
 	}
 
-	public float TimeNeeded() {
+	public float TimeNeeded()
+	{
 		float extraTime = Mathf.Log(Size) * ((float) ( Size * TimeToCrossModule ));
 		return (SimpleWayModules * TimeToCrossModule + extraTime)/ Mathf.Log(Difficulty * 5) ;
 	}
 
-	public void AddSimpleWayModule() {
+	public void AddSimpleWayModule()
+	{
 		SimpleWayModules += 1;
 		TotalModules += 1;
 	}
 
-	public void AddModule() {
+	public void AddModule()
+	{
 		TotalModules += 1;
 	}
 

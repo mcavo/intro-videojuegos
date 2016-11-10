@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SoundManager : MonoBehaviour {
-
+public class SoundManager : MonoBehaviour
+{
 	public AudioSource[] efxSources;
 	public AudioSource musicSource;                 // Drag a reference to the audio source which will play the music.
 	public AudioClip musicClip;
@@ -33,7 +33,8 @@ public class SoundManager : MonoBehaviour {
 				source.Pause ();
 			}
 			musicSource.Pause ();
-		} else {
+		} else
+		{
 			foreach(AudioSource source in efxSources)
 			{
 				source.Play ();
@@ -47,7 +48,8 @@ public class SoundManager : MonoBehaviour {
 	{
 		foreach (AudioSource efxSource in efxSources) 
 		{
-			if (!efxSource.isPlaying) {
+			if (!efxSource.isPlaying)
+			{
 				efxSource.clip = clip;
 
 				//Play the clip.

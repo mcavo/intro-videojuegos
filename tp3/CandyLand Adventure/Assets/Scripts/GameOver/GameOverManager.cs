@@ -3,7 +3,8 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverManager : MonoBehaviour {
+public class GameOverManager : MonoBehaviour
+{
 
 	public GameObject gameManager;			//GameManager prefab to instantiate.
 	public GameObject soundManager;			//SoundManager prefab to instantiate.
@@ -19,14 +20,17 @@ public class GameOverManager : MonoBehaviour {
 	public Button[] PlayHarder;
 	public Button[] PlayAgain;
 
-	void Awake() {
+	void Awake()
+	{
 		//Check if a GameManager has already been assigned to static variable GameManager.instance or if it's still null
-		if (GameManager.instance == null) {
+		if (GameManager.instance == null)
+		{
 			//Instantiate gameManager prefab
 			Instantiate (gameManager);
 		}
 		//Check if a SoundManager has already been assigned to static variable SoundManager.instance or if it's still null
-		if (SoundManager.instance == null) {
+		if (SoundManager.instance == null)
+		{
 		//Instantiate SoundManager prefab
 			Instantiate(soundManager);
 		}
@@ -34,55 +38,71 @@ public class GameOverManager : MonoBehaviour {
 	}
 		
 	// Use this for initialization
-	void Start () {
-		foreach (var b in MenuButtons) {
+	void Start ()
+	{
+		foreach (var b in MenuButtons)
+		{
 			b.onClick.AddListener (MenuButtonOnClick);
 		}
-		foreach (var b in PlayEasier) {
+		foreach (var b in PlayEasier)
+		{
 			b.onClick.AddListener (PlayEasierButtonOnClick);
 		}
-		foreach (var b in PlayHarder) {
+		foreach (var b in PlayHarder)
+		{
 			b.onClick.AddListener (PlayHarderButtonOnClick);
 		}
-		foreach (var b in PlayAgain) {
+		foreach (var b in PlayAgain)
+		{
 			b.onClick.AddListener (PlayAgainButtonOnClick);
 		}
 		SoundManager.instance.playBasicMusic();
 	}
 
-	void Fill() {
-		if (GameManager.instance.Win) {
+	void Fill()
+	{
+		if (GameManager.instance.Win)
+		{
 			FeedBack.text = "Delicious!!";
-			if (GameManager.instance.Difficulty < 3) {
+			if (GameManager.instance.Difficulty < 3)
+			{
 				WinLessThanHard.SetActive (true);
-			} else {
+			} else
+			{
 				WinHardOrLooseEasy.SetActive (true);
 			}
-		} else {
+		} else
+		{
 			FeedBack.text = "So sad!!";
-			if (GameManager.instance.Difficulty > 1) {
+			if (GameManager.instance.Difficulty > 1)
+			{
 				LooseGreatThanEasy.SetActive (true);
-			} else {
+			} else
+			{
 				WinHardOrLooseEasy.SetActive (true);
 			}
 		}
 	}
 
-	void PlayAgainButtonOnClick() {
+	void PlayAgainButtonOnClick()
+	{
 		SceneManager.LoadScene ("Level");
 	}
 
-	void PlayEasierButtonOnClick() {
+	void PlayEasierButtonOnClick()
+	{
 		GameManager.instance.Difficulty -= 1;
 		SceneManager.LoadScene ("Level");
 	}
 
-	void PlayHarderButtonOnClick() {
+	void PlayHarderButtonOnClick()
+	{
 		GameManager.instance.Difficulty += 1;
 		SceneManager.LoadScene ("Level");
 	}
 
-	void MenuButtonOnClick() {
+	void MenuButtonOnClick()
+	{
 		SceneManager.LoadScene ("Menu");
 	}
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// Extends from BlinkingObject to regulate difficulty
 public class Trap : MonoBehaviour {
 	
 	public float reduceSpeed = 5f;
@@ -9,7 +8,8 @@ public class Trap : MonoBehaviour {
 	public float duration = 1f;
 	public AudioClip audio;
 
-	void OnTriggerEnter(Collider col) {
+	void OnTriggerEnter(Collider col)
+	{
 		GameManager.instance.TimeLeft += reduceTime;
 		if (audio != null) 
 		{

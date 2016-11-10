@@ -4,8 +4,8 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.ImageEffects;
 
-public class GameManager : MonoBehaviour {
-
+public class GameManager : MonoBehaviour
+{
 	public static GameManager instance = null;				// Static instance of GameManager which allows it to be accessed by any other script.
 
 	public Dungeon[] Dungeons;
@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour {
 	public bool Win;
 	public AudioClip endLevel;
 
-	void Awake() {
+	void Awake()
+	{
 		//Check if instance already exists
 		if (instance == null)
 		{
@@ -34,29 +35,28 @@ public class GameManager : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		DungeonToPlay = 0;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-	public void InitGame() {
+	public void InitGame()
+	{
 		InitDungeon ();
 		SetCamera ();
 		SetTimer ();
 	}
 
-	private void SetCamera() {
+	private void SetCamera()
+	{
 		var InitDungeon = GameObject.Find ("StartPoint").GetComponent<Transform> ();
 		var camera = GameObject.Find ("Main Camera");
 		camera.transform.position = InitDungeon.transform.position;
 		camera.transform.rotation = InitDungeon.transform.rotation;
 	}
 
-	private void InitDungeon() {
+	private void InitDungeon()
+	{
 		DungeonCreator dc = GameObject.Find ("DungeonCreator").GetComponent<DungeonCreator> ();
 		Dungeon d = Dungeons [DungeonToPlay];
 
@@ -71,16 +71,19 @@ public class GameManager : MonoBehaviour {
 		Time = d.TimeNeeded();
 	}
 
-	private void SetTimer() {
+	private void SetTimer()
+	{
 		StartCoroutine (StartRoutine ());
 	}
 
-	private IEnumerator StartRoutine() {
+	private IEnumerator StartRoutine()
+	{
 		yield return new WaitForSeconds (1.0f);
 		GameObject.Find("Fill").GetComponent<TimeManager> ().enabled = true;
 	}
 
-	private IEnumerator WinRoutine() {
+	private IEnumerator WinRoutine()
+	{
 		SoundManager.instance.PlaySingle (endLevel);
 		GameObject.Find ("Main Camera").GetComponent<Bloom> ().enabled = true;
 		Destroy (GameObject.Find("Cake"));
