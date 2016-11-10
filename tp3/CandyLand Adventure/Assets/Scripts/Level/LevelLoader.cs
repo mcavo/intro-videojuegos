@@ -7,7 +7,6 @@ public class LevelLoader : MonoBehaviour {
 	public GameObject soundManager;			//SoundManager prefab to instantiate.
 
 	public GameObject Pause;
-	private bool paused;
 
 	void Awake ()
 	{
@@ -26,7 +25,6 @@ public class LevelLoader : MonoBehaviour {
 	void Start ()
 	{
 		GameManager.instance.InitGame ();
-		paused = false;
 		StartCoroutine (PauseRoutine ());
 		SoundManager.instance.playBasicMusic ();
 	}
@@ -36,13 +34,11 @@ public class LevelLoader : MonoBehaviour {
 		{
 			if (Input.GetKeyDown(KeyCode.P))
 			{
-				paused = true;
 				Time.timeScale = 0;
 				Pause.SetActive (true);
 			}    
 			if (Input.GetKeyDown(KeyCode.R))
 			{
-				paused = false;
 				Time.timeScale = 1;
 				Pause.SetActive (false);
 			}  
